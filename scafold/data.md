@@ -1,0 +1,14 @@
+created:		55555555555
+status:			STATUS
+tags:			TAG,TAG,TAG
+media:			FILENAME.jpg					LEGEND © AUTHOR
+
+
+
+# TITLE
+
+## STUDIO_NAME - LOCATION, COUNTRY (YEAR)
+
+TEXT.
+
+[SOURCE](SOURCE_URL)

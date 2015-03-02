@@ -1,0 +1,62 @@
+{
+	"name": "writenode",
+	"version": "0.2.1",
+	"homepage": "http://converge.fr",
+	"description": "Simple static blog generator",
+	"author": {
+		"name": "Raphael Gully",
+		"website": "http://dreadcast.com"
+	},
+	
+	"readmeFilename": "Readme.md",
+	"homepage": "https://github.com/dreadcast/writenode",
+  
+	"keywords": [
+		"website",
+		"blog",
+		"templating",
+		"generator",
+		"static"
+	],
+	
+	"repository": {
+		"type": "git",
+		"url": "git@bitbucket.org:dreadcast/writenode.git"
+	},
+	"bugs": {
+		"url": "https://github.com/dreadcast/writenode/issues"
+	},
+	
+	"dependencies": {
+		"express": "3.1.0",
+		"html-minifier": "latest",
+		"less": "latest",
+		"prime": "latest",
+		"fs-extra": "latest",
+		"request": "2.48.0",
+		"imageinfo": "1.0.4",
+		"uglify-js": ">=2.4",
+		"swig": "latest",
+		"swig-extras": "latest",
+		"cheerio": "0.13.1",
+		"underscore.string": "2.4.0",
+		"markdown": "latest",
+		"rss": "0.3.2",
+		"prompt": "0.2.13",
+		"open": "latest",
+		"moment": "2.9.0",
+		"hidash": "git+https://dreadcast@github.com/dreadcast/hidash.git",
+		"less-plugin-autoprefix": "1.1.0"
+	},
+	
+	"devDependencies": {
+		"yuidocjs": "0.5.0",
+		"nodemon": ">=1.0.14"
+	},
+	
+	"main": "./App.js",
+	
+	"scripts": {
+		"start": "nodemon server.js"
+	}
+}
