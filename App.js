@@ -12,14 +12,14 @@ var App = Class({
 		pathToBlog: Path.join(__dirname, 'default')
 	},
 	
-	constructor: function(options){
-		var pathToBlog = this.options.pathToBlog = Path.resolve('.');
+	constructor: function(themeName, pathToTheme){
+		var pathToBlog = this.options.pathToBlog = Path.resolve('.'),
+			theme = pathToTheme ? require(Path.join(pathToBlog, pathToTheme)) : module.parent.require(themeName);
 		
-		this.setOptions(require(Path.join(pathToBlog, 'package')).config);
+		this.setOptions(theme.config)
+			.setOptions(require(Path.join(pathToBlog, 'package')).config);
 		
-		this.options.theme = Path.join(pathToBlog, 'node_modules/theme');
-		
-		this.setOptions(options);
+		this.options.theme = pathToTheme ? pathToTheme : Path.join(module.parent.paths[0], themeName);
 		
 		this.articleCtrl = new ArticleCtrl({
 			pathToBlog: this.options.pathToBlog,
