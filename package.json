@@ -28,25 +28,35 @@
 	},
 	
 	"dependencies": {
-		"express": "3.1.0",
+		"gulp": "3.8.11",
+		"gulp-concat": "2.5.2",
+		"gulp-uglify": "1.1.0",
+		"gulp-less": "3.0.1",
+		"gulp-nodemon": "1.0.5",
+		"gulp-minify-html": "1.0.0",
+		"gulp-markdown": "1.0.0",
+		"gulp-autoprefixer": "2.1.0",
+		
 		"html-minifier": "latest",
 		"less": "latest",
-		"prime": "latest",
-		"fs-extra": "latest",
-		"request": "2.48.0",
-		"imageinfo": "1.0.4",
 		"uglify-js": ">=2.4",
 		"swig": "latest",
 		"swig-extras": "latest",
+		"markdown": "latest",
+		"less-plugin-autoprefix": "1.1.0",
+		
+		"express": "3.1.0",
+		"prime": "0.4.2",
+		"fs-extra": "0.16.4",
+		"request": "2.48.0",
+		"imageinfo": "1.0.4",
 		"cheerio": "0.13.1",
 		"underscore.string": "2.4.0",
-		"markdown": "latest",
 		"rss": "0.3.2",
 		"prompt": "0.2.13",
-		"open": "latest",
+		"open": "0.0.5",
 		"moment": "2.9.0",
-		"hidash": "git+https://dreadcast@github.com/dreadcast/hidash.git",
-		"less-plugin-autoprefix": "1.1.0"
+		"hidash": "git+https://dreadcast@github.com/dreadcast/hidash.git"
 	},
 	
 	"devDependencies": {

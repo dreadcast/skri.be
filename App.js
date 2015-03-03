@@ -49,7 +49,18 @@ var App = Class({
 
 			console.info('Blog ready in ' + duration + ' sec !');
 			
-			cb.call(this)
+			cb.call(this);
+			
+			return;
+			
+			require('./gulpfile')({
+				build: Path.join(this.options.pathToBlog, 'build'),
+				scripts: [
+					Path.join(this.options.theme, 'js/**/*.js'),
+					Path.join('!', this.options.theme, 'js/Object.js'),
+					Path.join(this.options.theme, 'widget/**/*.js')
+				]
+			});
 		}, this);
 	},
 	
