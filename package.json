@@ -56,7 +56,8 @@
 		"prompt": "0.2.13",
 		"open": "0.0.5",
 		"moment": "2.9.0",
-		"hidash": "git+https://dreadcast@github.com/dreadcast/hidash.git"
+		"hidash": "git+https://dreadcast@github.com/dreadcast/hidash.git",
+		"backbone-supermodel": "latest"
 	},
 	
 	"devDependencies": {

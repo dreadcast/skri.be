@@ -23,7 +23,7 @@ module.exports = Class({
 		}
 				
 		delete item.baseUrl;
-		
+
 		return media.merge(item);
 	},
 	

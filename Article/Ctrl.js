@@ -37,14 +37,14 @@ var ArticleCtrl = Class({
 	browse: function(root, cb){
 		fs.recurse(root, function(path, filename, type, cursor){
 			if('data.md' == filename){
-				var article = new Article({
+				var article = new Article({}, {
 					pathToBlog: this.options.pathToBlog,
 					template: this.options.template
 				});
 				
 				this.addItem(article);
 				
-				article.on('merge', function(data){
+				article.on('change:tags', function(data){
 					this.addTags(article.get('tags'));
 				}.bind(this));
 				
@@ -131,10 +131,8 @@ var ArticleCtrl = Class({
 	},
 	
 	getArticle: function(url){
-		return _.find(this.items, {
-			data: {
-				url: url
-			}
+		return _.find(this.items, function(item){
+			return item.get('url') == url;
 		});
 	}
 });

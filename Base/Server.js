@@ -51,6 +51,7 @@
 					}));
 					
 				var article = articleCtrl.getArticle(path);
+				article && console.info('req', article.get('created'))
 				
 				if(article && format == 'static')
 					return res.sendfile(Path.join(pathToBlog, 'data', req.url));
