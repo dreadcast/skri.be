@@ -63,7 +63,7 @@ var Router = Class({
 	},
 	
 	start: function(port){
-		app.get(/^\/([a-zA-Z0-9\-_\/]+)\//, function(req, res, next){
+		app.get(/^\/([a-zA-Z0-9\-_\/]+)\/(.+)/, function(req, res, next){
 			this.emit('request', req.params[0], 'static', req, res, next);
 		}.bind(this));
 		

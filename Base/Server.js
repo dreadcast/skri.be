@@ -28,6 +28,9 @@
 				postsHtmlTpl = this.options.templates.posts.html;
 			
 			router.on('request', function(path, format, req, res, next){
+				if(format == 'static')
+					return next();
+				
 				if(_.contains(articleCtrl.tags, path))
 					return res.end(viewManager.render(format, {
 						mode: 'posts',
@@ -51,7 +54,6 @@
 					}));
 					
 				var article = articleCtrl.getArticle(path);
-				article && console.info('req', article.get('created'))
 				
 				if(article && format == 'static')
 					return res.sendfile(Path.join(pathToBlog, 'data', req.url));
