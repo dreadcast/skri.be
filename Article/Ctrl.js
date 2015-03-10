@@ -15,7 +15,7 @@ var listArticles = function(articles, properties){
 
 var ArticleCtrl = Class({
 	constructor: function(options){
-		this.options = _.deepmerge({}, this.options, options);
+		this.options = _.merge({}, this.options, options);
 // 		this.setOptions(options);
 		
 		this.items = [];

@@ -59,7 +59,7 @@ module.exports = Class({
 		var mergedSchema = {};
 		
 			
-		_.deepmerge(mergedSchema, this.schema, schema);
+		_.merge(mergedSchema, this.schema, schema);
 		
 		return mergedSchema;
 	},

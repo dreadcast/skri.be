@@ -7,7 +7,7 @@
 	
 	var Server = Class({
 		constructor: function(options){
-			this.options = _.deepmerge({}, this.options, options);
+			this.options = _.merge({}, this.options, options);
 			
 			return this.startRouter();
 		},

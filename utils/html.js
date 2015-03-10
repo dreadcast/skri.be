@@ -1,7 +1,6 @@
 var fs = require('fs'),
 	htmlminifier = require('html-minifier'),
 	_ = require('./bower_components/hidash/src/hidash.js'),
-	deepmerge = require('deepmerge'),
 	cheerio = require('cheerio');
 
 exports.init = function(config){

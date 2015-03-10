@@ -9,7 +9,6 @@ exports.build = function(config, Post, force){
 		http = require('http'),
 		mootools = require('mootools'),
 		querystring = require('querystring'),
-		deepmerge = require('deepmerge'),
 		htmlminifier = require('html-minifier'),
 		swig = require('swig'),
 		swigExtras = require('swig-extras'),

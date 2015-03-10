@@ -81,7 +81,7 @@ var App = Class({
 			options = {};
 		
 			
-		_.deepmerge(options, this.options, {
+		_.merge(options, this.options, {
 			articleCtrl: this.articleCtrl,
 			viewManager: this.viewManager
 		});

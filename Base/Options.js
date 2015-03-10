@@ -7,7 +7,7 @@ var Options = Prime({
 	setOptions: function(options){
 		var defaultOptions = {}
 		
-		_.deepmerge(defaultOptions, _.cloneDeep(this.options), options);
+		_.merge(defaultOptions, _.cloneDeep(this.options), options);
 		
 		this.options = defaultOptions;
 		
