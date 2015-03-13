@@ -28,6 +28,7 @@
 	},
 	
 	"dependencies": {		
+		"backbone": "latest",
 		"html-minifier": "latest",
 		"less": "latest",
 		"uglify-js": ">=2.4",

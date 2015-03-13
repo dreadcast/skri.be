@@ -1,5 +1,8 @@
 var ArticleCtrl = require('./Article/Ctrl'),
+	ArticleCollection = require('./Article/Collection'),
+	ArticleModel = require('./Article/Model'),
 	ViewManager = require('./Base/ViewManager'),
+	fs = require('./utils/fs'),
 	_ = require('hidash'),
 	Path = require('path'),
 	Class = require('./Base/Class');
@@ -26,6 +29,9 @@ var App = Class({
 			template: this.options.templates.article,
 			featuredTags: this.options.site.featuredTags
 		});
+		
+		this.articles = new ArticleCollection([], {});
+		this.articles.setTemplates(this.options.templates);
 		
 		this.viewManager = new ViewManager({
 			templates: this.options.templates,
@@ -69,11 +75,42 @@ var App = Class({
 	},
 	
 	loadArticles: function(cb){
-		this.articleCtrl.browse(Path.join(this.options.pathToBlog, 'data'), function(){
+		var absPath = Path.join(this.options.pathToBlog, 'data');
+		fs.recurse(absPath, function(path, filename, type, cursor){
+			if('data.md' == filename){
+				var article = new ArticleModel({
+					id: Path.relative(absPath, path)
+				});
+				
+				this.articles.add(article);
+				
+				article.on('change:tags', function(data){
+					this.articles.addTags(article.get('tags'));
+				}.bind(this));
+				
+				article.parse(Path.join(path, filename), cursor);
+				
+			} else {
+				setTimeout(cursor, 1);
+			}
+		}.bind(this), function(){
+			console.info('Articles loaded')
+			console.info(this.articles.pluck('title'))
+			/*
+this.articles.each(function(article){
+				console.info(article.get('title'))
+			})
+*/
+			cb();
+		}.bind(this));
+			
+		/*
+this.articleCtrl.browse(Path.join(this.options.pathToBlog, 'data'), function(){
 			this.options.site.featuredTags = _.intersection(this.options.site.featuredTags, this.articleCtrl.tags);
 
 			cb();
 		}.bind(this));
+*/
 	},
 	
 	startServer: function(cb){
