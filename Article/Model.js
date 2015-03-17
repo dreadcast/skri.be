@@ -31,12 +31,12 @@
 			cover: {},
 			medias: {},
 			mediaCollection: {
-				type: 'collection',
-		// 				require: ['medias'],
-				compute: function(){
-					return new MediaCollection({
-						//pathToBlog: this.options.pathToBlog
-					});
+				initial: function(){
+					var mediaCollection = new MediaCollection();
+					
+					mediaCollection.pathToBlog = this.options.pathToBlog;
+					
+					return mediaCollection;
 				}
 			}
 		},
@@ -47,28 +47,26 @@
 			parsedMd.parseFile(function(rawArticle){
 				this.template = rawArticle.template || this.get('template').html;
 				
-				this.set(rawArticle);
+				this.get('mediaCollection').addItems(rawArticle.medias, cb);
+				delete rawArticle.medias;
 				
-				cb();
-				//this.get('mediaCollection').addItems(rawArticle.medias, cb);
+				this.set(rawArticle);
 			}.bind(this));
 			
 			return this;
-/*
 		},
 		
-		getRaw: function(){
-			var rawObj = this.parent();
+		toJSON: function(){
+			var rawObj = BaseModel.prototype.toJSON.apply(this);
 	
-			rawObj.medias = _.map(rawObj.mediaCollection.items, function(media, i){
-				return media.getRaw();
+			rawObj.medias = this.get('mediaCollection').map(function(media, i){
+				return media.toJSON();
 			});
 			
-			delete rawObj.mediaCollection;
-				
 			return rawObj; 
-*/
 		}
+/*
+*/
 	});
 	module.exports = ArticleModel;
 })();

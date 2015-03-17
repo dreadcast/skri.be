@@ -28,14 +28,16 @@
 				postsHtmlTpl = this.options.templates.posts.html;
 			
 			router.on('request', function(path, format, req, res, next){
+/*
 				if(format == 'static')
 					return next();
+*/
 				
 				if(_.contains(articleCtrl.tags, path))
 					return res.end(viewManager.render(format, {
 						mode: 'posts',
 						posts: articleCtrl.getPostsTagged(path).articles.map(function(article){
-							return article.getRaw();
+							return article.toJSON();
 						}),
 						currentTag: path,
 						template: {
@@ -53,7 +55,7 @@
 						}
 					}));
 					
-				var article = articleCtrl.getArticle(path);
+				var article = articleCtrl.get(path);
 				
 				if(article && format == 'static')
 					return res.sendfile(Path.join(pathToBlog, 'data', req.url));
@@ -61,7 +63,7 @@
 				if(article)
 					return res.end(viewManager.render(format, {
 						mode: 'article',
-						article: article.getRaw(),
+						article: article.toJSON(),
 						currentTag: _(article.get('tags')).intersection(featuredTags).first(),
 						template: {
 							html: article.template,

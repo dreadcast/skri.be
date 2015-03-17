@@ -1,10 +1,29 @@
 (function(){
-	var 
-		_ = require('hidash'),
-		Model = require('backbone').Model;
-// 		supermodel = require('backbone-supermodel');
+	var _ = require('hidash'),
+		Backbone = require('backbone');
 
-	var BaseModel = Model.extend({
+	/**
+	 * Set key/value or values and cast schema fields with type property
+	 * @method castValue
+	 * @param {Mixed} value				Field value
+	 * @param {String} field			Field name
+	 * @return {Mixed} Value with its new type
+	 * @private
+	 */
+	var castValue = function(value, field){
+		var schemaPart = this.schema[field];
+
+		if(schemaPart && schemaPart.type)
+			value = this.cast(value, this.schema[field].type);
+		
+		return value;
+	};
+
+	var SuperModel = Backbone.Model.extend({
+		schema:{
+			
+		},
+		
 		/**
 		 * Set key/value or values and cast schema fields with type property
 		 * @method initialize
@@ -12,11 +31,21 @@
 		 * @param {Mixed} value				If field is of type String, corresponding value must be provided
 		 * @return {Backbone.Model.prototype.set} set
 		 */
-		initialize: function(){
+		initialize: function(attributes, options){
+			this.options = options;
+
+			_.each(this.schema, function(property, path){
+				if(property.compute && (this.hasAll(property.require) || !property.require))
+					this.set(path, property.compute.call(this));
+					
+				else if(property.initial && (this.hasAll(property.require) || !property.require))
+					this.set(path, _.isFunction(property.initial) ? property.initial.call(this) : property.initial);
+			}, this);
+
 			this.on('change', function(model){
 				this.set(_.mapValues(model.attributes, function(value, field){
 					var schemaPart = this.schema[field];
-			
+					
 					if(schemaPart && schemaPart.type)
 						value = this.cast(value, this.schema[field].type);
 					
@@ -31,7 +60,7 @@
 				}, this);
 			});
 			
-			return this;
+			return this.setSchema();
 		},
 		
 		/**
@@ -83,7 +112,7 @@
 				return _.from(value);
 			
 			return value;
-		},		
+		},
 		
 		/**
 		 * Return model into raw object without data attributes contained in this.tricare.
@@ -103,8 +132,10 @@
 			}, this);
 			
 			return rawObj;
-		}
+		},
+		
+		setSchema: function(){}
 	});
 	
-	module.exports = BaseModel;
+	module.exports = SuperModel;
 })();

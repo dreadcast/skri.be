@@ -1,40 +1,36 @@
-var Collection = require('./../Base/Collection'),
-	LocalMedia = require('./Model.Local'),
-	RemoteMedia = require('./Model.Remote'),
-	Path = require('path'),
-	_ = require('hidash'),
-	Class = require('./../Base/Class');
-
-module.exports = Class({
-	inherits: Collection,
+(function(){
+	var SuperCollection = require('./../Base/Collection'),
+		LocalMedia = require('./Model.Local'),
+		RemoteMedia = require('./Model.Remote'),
+		Path = require('path'),
+		_ = require('hidash');
 	
-	addItem: function(item){
-		var media,
-			options = {
-				pathToBlog: this.options.pathToBlog
-			};
-		
-		if(/^http/.test(item.url)){
-			media = new RemoteMedia(options);
-			
-		} else {
-			item.url = Path.join(item.baseUrl, item.url);
-			media = new LocalMedia(options);
-		}
+	var MediaCollection = SuperCollection.extend({
+		model: function(attributes){
+			if(/^http/.test(attributes.url)){
+				media = new RemoteMedia(attributes);
 				
-		delete item.baseUrl;
-
-		return media.merge(item);
-	},
-	
-	addItems: function(items, cb){
-		_.eachAsync(items, function(item, i, cursor){
-			var media = this.addItem(item);
-			this.items.push(media);
-			media.getOEmbedInfo()
-				.request(cursor);
-		}, cb, this);
+			} else {
+				attributes.url = Path.join(attributes.baseUrl, attributes.url);
+				media = new LocalMedia(attributes);
+			}
+			
+			return media;
+		},
 		
-		return this;
-	}
-});
+		addItems: function(medias, cb){
+			_.eachAsync(medias, function(media, i, cursor){
+				this.add(media);
+				
+				media = this.get(media.url);
+				media.pathToBlog = this.pathToBlog;
+				
+				media.getOEmbedInfo()
+					.request(cursor);
+			}, cb, this);
+			
+			return this;
+		}
+	});
+	module.exports = MediaCollection;
+})();

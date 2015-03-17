@@ -1,17 +1,21 @@
 (function(){
 	var _ = require('hidash'),
 		Path = require('path'),
-		Collection = require('backbone').Collection/*
-,
-		ArticleModel = require('./Model')
-*/;
-	
-	var ArticleCollection = Collection.extend({
-// 		model: ArticleModel,
+		SuperCollection = require('./../Base/Collection'),
+		ArticleModel = require('./Model');
+
+	var listArticles = function(articles, properties){
+		return _.merge({
+			articles: articles,
+			total: articles.length
+		}, properties);
+	};
+
+	var ArticleCollection = SuperCollection.extend({
+		model: ArticleModel,
 		
 		initialize: function(){
 			this.on('add', function(model){
-// 				model = model.attributes;
 				model.set('template', this.getTemplate('article'));
 			});
 		},
@@ -37,6 +41,16 @@
 		
 		setTemplates: function(templates){
 			_.merge(this.templates, templates);
+		},
+	
+		getPostsTagged: function(tag){
+			var articles = this.filter(function(article){
+				return _.contains(article.get('tags'), tag);
+			});
+			
+			return listArticles(articles, {
+				tag: tag
+			});
 		}
 	});
 	

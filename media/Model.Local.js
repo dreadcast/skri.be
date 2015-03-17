@@ -1,7 +1,5 @@
 ;(function(){
-	var //Prime = require('prime'),
-		_ = require('hidash'),
-		Class = require('./../Base/Class'),
+	var _ = require('hidash'),
 		Path = require('path'),
 		imageinfo = require('imageinfo'),
 		fs = require('fs'),
@@ -21,23 +19,20 @@
 			}
 		};
 	
-	var LocalMediaModel = Class({
-		inherits: MediaModel,
-		
-		setSchema: function(){
-			this.parent();
-			this.schema = this.mergeSchema(schema);
-			
-			return this;
-		},
-		
+	var LocalMediaModel = MediaModel.extend({
 		getOEmbedInfo: function(){
 			return this.set('provider', 'local')
 				.set('type', 'image');
 		},
 		
+		setSchema: function(){
+			this.schema = _.merge({}, this.schema, schema);
+			
+			return this;
+		},
+		
 		request: function(cb){
-			var path = Path.join(this.options.pathToBlog, 'data', this.get('url'));
+			var path = Path.join(this.pathToBlog, 'data', this.get('url'));
 			
 			fs.readFile(path, function(err, data){
 				if(err)
@@ -46,7 +41,7 @@
 				try{
 					var info = imageinfo(data);
 					
-					this.merge({
+					this.set({
 						width: info.width,
 						height: info.height
 					});

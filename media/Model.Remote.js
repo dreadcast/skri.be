@@ -1,7 +1,5 @@
 ;(function(){
-	var //Prime = require('prime'),
-		_ = require('hidash'),
-		Class = require('./../Base/Class'),
+	var _ = require('hidash'),
 		MediaModel = require('./Model'),
 		request = require('request'),
 		schema = {
@@ -9,12 +7,9 @@
 			'embedUrl': {}
 		};
 
-	var RemoteMediaModel = Class({
-		inherits: MediaModel,
-
+	var RemoteMediaModel = MediaModel.extend({
 		setSchema: function(){
-			this.parent();
-			this.schema = this.mergeSchema(schema);
+			this.schema = _.merge({}, this.schema, schema);
 			
 			return this;
 		},
@@ -30,7 +25,7 @@
 					if(data.type == 'photo')
 						data.html = '<img src="' + data.url + '" alt="' + data.title + '">';
 					
-					this.merge(data);
+					this.set(data);
 				} else {
 					console.info(error);
 				}

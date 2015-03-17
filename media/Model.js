@@ -1,6 +1,5 @@
 ;(function(){
-	var Class = require('./../Base/Class'),
-		_ = require('hidash'),
+	var _ = require('hidash'),
 		BaseModel = require('./../Base/Model'),
 		ratios = {
 			'mgm': 2.76,
@@ -60,22 +59,13 @@
 	});
 		
 	
-	var MediaModel = Class({
-		inherits: BaseModel,
-
+	var MediaModel = BaseModel.extend({
+		idAttribute: 'url',
+		
 		setSchema: function(){
-			this.parent();
-			this.schema = this.mergeSchema(schema);
+			this.schema = _.merge({}, this.schema, schema);
 			
 			return this;
-		},
-
-		getRaw: function(){
-			var rawObj = this.parent();
-			
-			delete rawObj.oEmbedInfo;
-			
-			return rawObj;
 		}
 	});
 	

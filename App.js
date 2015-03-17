@@ -1,5 +1,4 @@
-var ArticleCtrl = require('./Article/Ctrl'),
-	ArticleCollection = require('./Article/Collection'),
+var ArticleCollection = require('./Article/Collection'),
 	ArticleModel = require('./Article/Model'),
 	ViewManager = require('./Base/ViewManager'),
 	fs = require('./utils/fs'),
@@ -24,20 +23,14 @@ var App = Class({
 		
 		this.options.theme = pathToTheme ? pathToTheme : Path.join(module.parent.paths[0], themeName);
 		
-		this.articleCtrl = new ArticleCtrl({
-			pathToBlog: this.options.pathToBlog,
-			template: this.options.templates.article,
-			featuredTags: this.options.site.featuredTags
-		});
-		
 		this.articles = new ArticleCollection([], {});
-		this.articles.setTemplates(this.options.templates);
+ 		this.articles.setTemplates(this.options.templates);
 		
 		this.viewManager = new ViewManager({
 			templates: this.options.templates,
 			defaults: {
 				site: this.options.site,
-				tags: this.articleCtrl.tags
+				tags: this.articles.tags
 			},
 			theme: this.options.theme
 		});
@@ -79,7 +72,10 @@ var App = Class({
 		fs.recurse(absPath, function(path, filename, type, cursor){
 			if('data.md' == filename){
 				var article = new ArticleModel({
-					id: Path.relative(absPath, path)
+					id: Path.relative(absPath, path),
+					template: this.options.templates.article
+				}, {
+					pathToBlog: this.options.pathToBlog
 				});
 				
 				this.articles.add(article);
@@ -91,26 +87,13 @@ var App = Class({
 				article.parse(Path.join(path, filename), cursor);
 				
 			} else {
-				setTimeout(cursor, 1);
+				setTimeout(cursor, .1);
 			}
 		}.bind(this), function(){
 			console.info('Articles loaded')
-			console.info(this.articles.pluck('title'))
-			/*
-this.articles.each(function(article){
-				console.info(article.get('title'))
-			})
-*/
+// 			console.info(this.articles.pluck('title'))
 			cb();
 		}.bind(this));
-			
-		/*
-this.articleCtrl.browse(Path.join(this.options.pathToBlog, 'data'), function(){
-			this.options.site.featuredTags = _.intersection(this.options.site.featuredTags, this.articleCtrl.tags);
-
-			cb();
-		}.bind(this));
-*/
 	},
 	
 	startServer: function(cb){
@@ -119,7 +102,7 @@ this.articleCtrl.browse(Path.join(this.options.pathToBlog, 'data'), function(){
 		
 			
 		_.merge(options, this.options, {
-			articleCtrl: this.articleCtrl,
+			articleCtrl: this.articles,
 			viewManager: this.viewManager
 		});
 		
