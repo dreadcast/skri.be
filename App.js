@@ -4,7 +4,9 @@ var ArticleCollection = require('./Article/Collection'),
 	fs = require('./utils/fs'),
 	_ = require('hidash'),
 	Path = require('path'),
-	Class = require('./Base/Class');
+	chokidar = require('chokidar'),
+	Class = require('./Base/Class'),
+	lessUtils = require('./utils/less');
 
 var startTime = new Date().getTime();
  
@@ -50,16 +52,28 @@ var App = Class({
 			
 			cb.call(this);
 			
-			return;
+			var devPath = Path.join(this.options.pathToBlog, 'cache');
 			
-			require('./gulpfile')({
-				build: Path.join(this.options.pathToBlog, 'build'),
-				scripts: [
-					Path.join(this.options.theme, 'js/**/*.js'),
-					Path.join('!', this.options.theme, 'js/Object.js'),
-					Path.join(this.options.theme, 'widget/**/*.js')
-				]
-			});
+			var watcher = chokidar.watch(this.options.theme, {
+				ignored: /^\./
+			}).on('all', function(event, filePath){
+				var relativePath = Path.relative(this.options.theme, filePath);
+
+				if(/\.css$/.test(filePath)){
+					console.info(event, Path.basename(filePath));
+	
+					var fileDestPath = Path.join(devPath, 'asset', relativePath);
+					
+					lessUtils.fromFile(filePath, function(css){
+						fs.outputFile(fileDestPath, css, function(err){
+							if(err)
+								throw new Error('Error saving ' + filePath);
+							
+							console.log(Path.basename(filePath) + ' was saved to ' + fileDestPath);
+						})
+					});
+				}
+			}.bind(this));			
 		}, this);
 	},
 	
