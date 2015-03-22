@@ -3,10 +3,10 @@ var ArticleCollection = require('./Article/Collection'),
 	ViewManager = require('./Base/ViewManager'),
 	fs = require('./utils/fs'),
 	_ = require('hidash'),
+	watcher = require('./watcher'),
 	Path = require('path'),
-	chokidar = require('chokidar'),
-	Class = require('./Base/Class'),
-	lessUtils = require('./utils/less');
+	md5 = require('MD5'),
+	Class = require('./Base/Class');
 
 var startTime = new Date().getTime();
  
@@ -30,6 +30,7 @@ var App = Class({
 		
 		this.viewManager = new ViewManager({
 			templates: this.options.templates,
+			pathToBlog: this.options.pathToBlog,
 			defaults: {
 				site: this.options.site,
 				tags: this.articles.tags
@@ -41,44 +42,25 @@ var App = Class({
 	},
 	
 	start: function(cb){
-		_.eachAsync(['startServer', 'loadArticles', 'loadTemplates'], function(fn, i, cursor, arr){
+		_.eachAsync(['startServer', 'loadArticles'], function(fn, i, cursor, arr){
 			this[fn](cursor);
 
 			console.info(fn + '... done');
 		}, function(){
 			var duration = Math.round(((new Date().getTime() - startTime) / 1000) * 10) / 10;
 
+			
 			console.info('Blog ready in ' + duration + ' sec !');
 			
 			cb.call(this);
 			
-			var devPath = Path.join(this.options.pathToBlog, 'cache');
-			
-			var watcher = chokidar.watch(this.options.theme, {
-				ignored: /^\./
-			}).on('all', function(event, filePath){
-				var relativePath = Path.relative(this.options.theme, filePath);
-
-				if(/\.css$/.test(filePath)){
-					console.info(event, Path.basename(filePath));
-	
-					var fileDestPath = Path.join(devPath, 'asset', relativePath);
-					
-					lessUtils.fromFile(filePath, function(css){
-						fs.outputFile(fileDestPath, css, function(err){
-							if(err)
-								throw new Error('Error saving ' + filePath);
-							
-							console.log(Path.basename(filePath) + ' was saved to ' + fileDestPath);
-						})
-					});
-				}
-			}.bind(this));			
 		}, this);
 	},
 	
-	loadTemplates: function(cb){
-		return this.viewManager.loadTemplates(cb);
+	build: function(){
+		return this.loadArticles(function(){
+			watcher.call(this, 'build');
+		}.bind(this));
 	},
 	
 	loadArticles: function(cb){
@@ -111,9 +93,10 @@ var App = Class({
 	},
 	
 	startServer: function(cb){
+		watcher.call(this, 'dev');
+			
 		var Server = require('./Base/Server'),
 			options = {};
-		
 			
 		_.merge(options, this.options, {
 			articleCtrl: this.articles,

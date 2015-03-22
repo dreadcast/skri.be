@@ -26,6 +26,7 @@ var Router = Class({
 		});
 */
 		var theme = this.options.theme,
+			pathToBlog = this.options.pathToBlog,
 			lessUtils = require('./../utils/less').init(this.options);
 		
 		app.get('*.svg', function(req, res, next){
@@ -38,15 +39,13 @@ var Router = Class({
 		app.get('*.css', function(req, res, next){
 			res.setHeader('Content-type', 'text/css');
 			
-			var path = Path.join(theme, req.url.replace(/^\/asset/, ''));
+			var path = Path.join(pathToBlog, 'dev', req.url);
 			
 			if(fs.existsSync(path))
-				lessUtils.fromFile(path, function(css){
-					res.end(css);
-				});
+				res.end(fs.readFileSync(path));
 			
 			else
-				next();
+				throw new Error('File not found: ' + req.url);
 		});
 		// Assets
 		app.get('/asset/*', function(req, res, next){

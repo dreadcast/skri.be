@@ -20,4 +20,15 @@ s.truncate = function(str, max, trail, atChar){
 	return str;
 };
 
+s.random = function(length){
+    var text = '',
+		possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ-_abcdefghijklmnopqrstuvwxyz0123456789',
+		l = length || 8;
+
+    for(var i = 0; i < l; i++ )
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+}
+
 module.exports = s;
