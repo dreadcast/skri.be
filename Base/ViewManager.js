@@ -32,6 +32,13 @@ module.exports = Class({
 		return this;
 	},
 	
+	/**
+	 *	Combines assets from templates <https://www.npmjs.com/package/node-useref>
+	 *	@method combine
+	 *	@async
+	 *	@param {Object} assetObj		Assets map returned by useref
+	 *	@param {Function} done			Callback, invoked when assets are concatenated and saved 
+	 */
 	combine: function(assetsObj, done){
 		var theme = this.options.theme,
 			pathToBlog = this.options.pathToBlog,
@@ -57,6 +64,14 @@ module.exports = Class({
 		});
 	},
 	
+	/**
+	 *	Copy template to TMP after being useref'd
+	 *	This is necessary when using useref, otherwise swig.extend, swig.import and swig.include always refer to template BEFORE useref
+	 *	@method copy
+	 *	@async
+	 *	@param {String} path			Path to template
+	 *	@param {Function} done			Callback, invoked when template is copied and useref'd 
+	 */
 	copy: function(path, done){
 		fs.readFile(path, {
 			encoding: 'utf8'
@@ -74,6 +89,13 @@ module.exports = Class({
 		}.bind(this));
 	},
 	
+	/**
+	 *	Copy all templates to TMP after being useref'd and compiles them
+	 *	@method compileAll
+	 *	@async
+	 *	@param {String} path			Path to template
+	 *	@param {Function} done			Callback, invoked when template is copied and useref'd 
+	 */
 	compileAll: function(done){
 		var pathToTmp = Path.join(this.options.pathToBlog, 'tmp');
 		
@@ -106,7 +128,6 @@ module.exports = Class({
 		if(this.options.minify)
 			return this.minify(this.templates[data.template.html](data));
 
-		//console.info(this.templates[data.template.html](data));
 		return this.templates[data.template.html](data);
 	},
 	

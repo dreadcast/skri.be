@@ -1,11 +1,11 @@
 var ArticleCollection = require('./Article/Collection'),
 	ArticleModel = require('./Article/Model'),
 	ViewManager = require('./Base/ViewManager'),
-	fs = require('./utils/fs'),
-	_ = require('hidash'),
+	fs = require('fs-extra'),
+	recurse = require('fs-recurse'),
+	_ = require('lowerdash'),
 	watcher = require('./watcher'),
 	Path = require('path'),
-	md5 = require('MD5'),
 	Class = require('./Base/Class');
 
 var startTime = new Date().getTime();
@@ -58,14 +58,12 @@ var App = Class({
 	},
 	
 	build: function(){
-		return this.loadArticles(function(){
-			watcher.call(this, 'build');
-		}.bind(this));
+		return this.loadArticles(require('./build/build').bind(this));
 	},
 	
 	loadArticles: function(cb){
 		var absPath = Path.join(this.options.pathToBlog, 'data');
-		fs.recurse(absPath, function(path, filename, type, cursor){
+		recurse(absPath, function(path, filename, type, cursor){
 			if('data.md' == filename){
 				var article = new ArticleModel({
 					id: Path.relative(absPath, path),
@@ -93,7 +91,7 @@ var App = Class({
 	},
 	
 	startServer: function(cb){
-		watcher.call(this, 'dev');
+		watcher.call(this);
 			
 		var Server = require('./Base/Server'),
 			options = {};

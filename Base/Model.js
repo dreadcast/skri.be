@@ -35,6 +35,13 @@
 			this.options = options;
 
 			_.each(this.schema, function(property, path){
+				if(property.change)
+					this.on('change:' + path, function(model){
+						this.set(path, property.change.call(this, this.get(path)), {
+							silent: true
+						});
+					});
+					
 				if(property.compute && (this.hasAll(property.require) || !property.require))
 					this.set(path, property.compute.call(this));
 					

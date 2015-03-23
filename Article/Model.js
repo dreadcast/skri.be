@@ -1,7 +1,7 @@
 (function(){
 	var 
 		_ = require('hidash'),
-		s = require('./../utils/superscore.string'),
+		s = require('superscore.string'),
 		md = require('./MarkDownParser'),
 		MediaCollection = require('./../Media/Collection'),
 		Path = require('path'),
@@ -10,6 +10,9 @@
 	var ArticleModel = BaseModel.extend({
 		idAttribute: 'id',
 		schema: {
+			title: {
+				change: s.clean
+			},
 			tags: {
 				type: 'array'
 			},
