@@ -7,10 +7,10 @@
 		"name": "Raphael Gully",
 		"website": "http://dreadcast.com"
 	},
-	
+
 	"readmeFilename": "Readme.md",
 	"homepage": "https://github.com/dreadcast/writenode",
-  
+
 	"keywords": [
 		"website",
 		"blog",
@@ -18,7 +18,7 @@
 		"generator",
 		"static"
 	],
-	
+
 	"repository": {
 		"type": "git",
 		"url": "git@bitbucket.org:dreadcast/writenode.git"
@@ -26,44 +26,54 @@
 	"bugs": {
 		"url": "https://github.com/dreadcast/writenode/issues"
 	},
-	
-	"dependencies": {		
+
+	"dependencies": {
 		"backbone": "latest",
-		"html-minifier": "latest",
-		"less": "latest",
+		"backbone.paginator": "latest",
+
+		"bluebird": "latest",
 		"uglify-js": ">=2.4",
-		"swig": "latest",
-		"swig-extras": "latest",
-		"markdown": "latest",
+
+		"less": "latest",
 		"less-plugin-autoprefix": "1.1.0",
-		
+
+		"nunjucks": "latest",
+		"html-minifier": "latest",
+		"node-useref": "latest",
+
+		"marked": "latest",
+		"front-matter": "latest",
+
 		"express": "3.1.0",
-		"prime": "0.4.2",
+		"babel": "latest",
+
 		"fs-extra": "0.16.4",
 		"fs-recurse": "latest",
+
 		"request": "2.48.0",
+
 		"imageinfo": "1.0.4",
+
 		"cheerio": "0.13.1",
 		"superscore.string": "latest",
 		"rss": "0.3.2",
 		"prompt": "0.2.13",
 		"open": "0.0.5",
 		"moment": "2.9.0",
+
 		"anymatch": "1.1.0",
 		"chokidar": "latest",
-		"node-useref": "0.3.9",
-		"anymatch": "1.1.0",
 		"lowerdash": "latest"
 	},
-	
+
 	"devDependencies": {
 		"dreadcast-operative": "latest",
 		"nodemon": ">=1.0.14"
 	},
-	
-	"main": "./App.js",
-	
+
+	"main": "./index.js",
+
 	"scripts": {
-		"start": "nodemon server.js"
+		"start": "nodemon index.js"
 	}
 }
