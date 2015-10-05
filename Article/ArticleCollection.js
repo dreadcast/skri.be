@@ -1,7 +1,7 @@
 import Lowerdash from 'lowerdash';
 import Path from 'path';
 import PageableCollection from 'backbone.paginator';
-// import ArticleModel from './Model';
+import ArticleModel from './ArticleModel';
 
 var listArticles = function(articles, properties){
 	return Lowerdash.merge({
@@ -11,17 +11,13 @@ var listArticles = function(articles, properties){
 };
 
 export default class ArticleCollection extends PageableCollection {
-	// model: ArticleModel,
+	model = ArticleModel;
+	templates = {};
+	tags = [];
 
 	initialize(){
-		this.on('add', function(model){
-			model.set('template', this.getTemplate('article'));
-		});
+		this.on('add', article => article.set('template', this.getTemplate('article')));
 	}
-
-	templates = {}
-
-	tags = []
 
 	addTags(tags){
 		var previousTags = this.tags;
@@ -32,8 +28,9 @@ export default class ArticleCollection extends PageableCollection {
 			.sort()
 			.value();
 
-		if(previousTags != this.tags)
+		if(previousTags != this.tags){
 			this.trigger('changetag', this.tags);
+		}
 
 		return this;
 	}
@@ -47,9 +44,7 @@ export default class ArticleCollection extends PageableCollection {
 	}
 
 	getPostsTagged(tag){
-		var articles = this.filter(function(article){
-			return Lowerdash.contains(article.get('tags'), tag);
-		});
+		var articles = this.filter(article => Lowerdash.contains(article.get('tags'), tag));
 
 		return listArticles(articles, {
 			tag: tag
@@ -57,31 +52,23 @@ export default class ArticleCollection extends PageableCollection {
 	}
 
 	getFeaturedPosts(){
-		var items = this.getPosts(),
-			articles = Lowerdash.filter(items.articles, function(article){
-				return article.get('featured');
-			});
+		var items = this.items,
+			articles = this.filter(article => article.get('featured'));
 
 		return listArticles(articles);
 	}
 
 	sortBy(field){
-		var items = this.getPosts(),
+		var items = this.items,
 			articles = Lowerdash.sortBy(items.articles, field);
 
 		return listArticles(articles);
 	}
 
 	groupBy(field){
-		var items = this.getPosts(),
+		var items = this.items,
 			articles = Lowerdash.groupBy(items.articles, field);
 
 		return listArticles(articles);
-	}
-
-	getArticle(url){
-		return Lowerdash.find(this.items, function(item){
-			return item.get('url') == url;
-		});
 	}
 }

@@ -1,17 +1,11 @@
-// 	ArticleModel = require('./Article/Model'),
-// 	ViewManager = require('./Base/ViewManager'),
-// 	fs = require('fs-extra'),
-// 	recurse = require('fs-recurse'),
-// 	_ = require('lowerdash'),
-// 	watcher = require('./watcher'),
-// 	Path = require('path'),
-// 	Class = require('./Base/Class');
-
 import ArticleCollection from './Article/ArticleCollection';
 import Lowerdash from 'lowerdash';
 import Path from 'path';
 import fs from 'fs-extra';
 import recurse from 'fs-recurse';
+import chokidar from 'chokidar';
+import marked from 'marked';
+import FrontMatter from 'front-matter';
 
 var startTime = new Date().getTime();
 
@@ -32,7 +26,7 @@ export default class Writenode {
 
 		// this.options.theme = pathToTheme ? pathToTheme : Path.join(module.parent.paths[0], themeName);
 
-		this.articles = new ArticleCollection([], {});
+		var articles = this.articles = new ArticleCollection;
  		this.articles.setTemplates(this.options.templates);
 
 		// this.viewManager = new ViewManager({
@@ -44,7 +38,49 @@ export default class Writenode {
 		// 	},
 		// 	theme: this.options.theme
 		// });
-		console.info(this.articles);
+		// console.info(this.articles);
+
+		function md(path){
+			var article;
+
+			return new Promise((resolve, reject) => {
+				return fs.readFile(Path.join(pathToBlog, 'data', path, 'data.md'), {
+					encoding: 'utf-8'
+				}, (error, data) => {
+					if(error){
+						return reject(error);
+
+					} else {
+						return resolve(data);
+					}
+				});
+			})
+			.catch(error => console.error(error))
+			.then(rawMarkdown => {
+				let { attributes, body } = FrontMatter(rawMarkdown);
+
+				if(typeof attributes.tags == 'string'){
+					attributes.tags = attributes.tags.split(/,\s?/);
+				}
+
+				attributes.id = path;
+				attributes.content = marked(body);
+				attributes.title = body.match(/#(.*)\n/)[1];
+
+				articles.add(attributes, {
+					pathToBlog
+				});
+				article = articles.get(path);
+
+				return article.getMedias();
+			});
+		}
+
+		Promise.all([
+			md('family-house-dlhe-diely-i'),
+			md('ein-mann-sauna'),
+		])
+			.then(() => console.info(articles.pluck('title')));
 
 		return this;
 	}
@@ -56,7 +92,6 @@ export default class Writenode {
 			console.info(fn + '... done');
 		}, function(){
 			var duration = Math.round(((new Date().getTime() - startTime) / 1000) * 10) / 10;
-
 
 			console.info('Blog ready in ' + duration + ' sec !');
 
@@ -93,7 +128,6 @@ export default class Writenode {
 			}
 		}.bind(this), function(){
 			console.info('Articles loaded')
-// 			console.info(this.articles.pluck('title'))
 			cb();
 		}.bind(this));
 	}

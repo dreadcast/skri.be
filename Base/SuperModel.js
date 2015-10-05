@@ -1,5 +1,6 @@
 import Lowerdash from 'lowerdash';
 import { Model } from 'backbone';
+import moment from 'moment';
 
 /**
  * Set key/value or values and cast schema fields with type property
@@ -18,10 +19,10 @@ var castValue = function(value, field){
 	return value;
 };
 
-export default SuperModel = Model.extend({
-	schema:{
+export default class SuperModel extends Model {
+	schema = {
 
-	},
+	};
 
 	/**
 	 * Set key/value or values and cast schema fields with type property
@@ -30,44 +31,51 @@ export default SuperModel = Model.extend({
 	 * @param {Mixed} value				If field is of type String, corresponding value must be provided
 	 * @return {Backbone.Model.prototype.set} set
 	 */
-	initialize: function(attributes, options){
+	constructor(attributes, options){
+		super(attributes, options);
+
 		this.options = options;
+		this.setSchema();
 
 		Lowerdash.each(this.schema, function(property, path){
-			if(property.change)
-				this.on('change:' + path, function(model){
+			if(property.change){
+				this.on('change:' + path, model => {
 					this.set(path, property.change.call(this, this.get(path)), {
 						silent: true
 					});
 				});
+			}
 
-			if(property.compute && (this.hasAll(property.require) || !property.require))
+			if(property.compute && (this.hasAll(property.require) || !property.require)){
 				this.set(path, property.compute.call(this));
 
-			else if(property.initial && (this.hasAll(property.require) || !property.require))
+			} else if(property.initial && (this.hasAll(property.require) || !property.require)){
 				this.set(path, Lowerdash.isFunction(property.initial) ? property.initial.call(this) : property.initial);
+			}
 		}, this);
 
-		this.on('change', function(model){
-			this.set(Lowerdash.mapValues(model.attributes, function(value, field){
+		this.on('change', model => {
+			this.set(Lowerdash.mapValues(model.attributes, (value, field) => {
 				var schemaPart = this.schema[field];
 
-				if(schemaPart && schemaPart.type)
+				if(schemaPart && schemaPart.type){
 					value = this.cast(value, this.schema[field].type);
+				}
 
 				return value;
-			}, this), {
+			}), {
 				silent: true
 			});
 
-			Lowerdash.each(this.schema, function(property, path){
-				if(property.compute && (this.hasAll(property.require) || !property.require))
+			Lowerdash.each(this.schema, (property, path) => {
+				if(property.compute && (this.hasAll(property.require) || !property.require)){
 					this.set(path, property.compute.call(this));
-			}, this);
+				}
+			});
 		});
 
-		return this.setSchema();
-	},
+		return this;
+	}
 
 	/**
 	 * Checks if given key is a custom one
@@ -75,9 +83,9 @@ export default SuperModel = Model.extend({
 	 * @param {String} key 				Key name
 	 * @return {Bool}					Instance's key presence
 	 */
-	isComputed: function(path){
+	isComputed(path){
 		return this.has(path) && Lowerdash.isFunction(this.get(this.schema, path).compute);
-	},
+	}
 
 	/**
 	 * Checks if model has all provided fields
@@ -85,11 +93,9 @@ export default SuperModel = Model.extend({
 	 * @param {Array} fields		Fields that must verify the presence
 	 * @return {Boolean}			All fields are present
 	 */
-	hasAll: function(fields){
-		return Lowerdash.every(fields, function(item){
-			return this.has(item);
-		}, this);
-	},
+	hasAll(fields){
+		return Lowerdash.every(fields, item => this.has(item));
+	}
 
 	/**
 	 * Change the type of the provided value
@@ -98,34 +104,35 @@ export default SuperModel = Model.extend({
 	 * @param {String} type			Type to cast value to. Type can be 'number', 'boolean', 'date' or 'array'
 	 * @return {Mixed}				Casted value
 	 */
-	cast: function(value, type){
-		if(type == 'number' && !Lowerdash.isNumber(value))
+	cast(value, type){
+		if(type == 'number' && !Lowerdash.isNumber(value)){
 			return Number(value);
 
-		else if(type == 'boolean' && !Lowerdash.contains([undefined, null, 'false', 0, '0', false], value))
+		} else if(type == 'boolean' && !Lowerdash.contains([undefined, null, 'false', 0, '0', false], value)){
 			return true;
 
-		else if(type == 'boolean' && Lowerdash.contains([undefined, null, 'false', 0, '0'], value))
+		} else if(type == 'boolean' && Lowerdash.contains([undefined, null, 'false', 0, '0'], value)){
 			return false;
 
-		else if(type == 'date' && !Lowerdash.isDate(value))
-			return new Date(parseInt(value));
+		} else if(type == 'date' && !Lowerdash.isDate(value)){
+			return moment(value);
 
-		else if(type == 'array' && Lowerdash.isString(value))
+		} else if(type == 'array' && Lowerdash.isString(value)){
 			return value.split(',');
 
-		else if(type == 'array' && !Lowerdash.isArray(value))
+		} else if(type == 'array' && !Lowerdash.isArray(value)){
 			return Lowerdash.from(value);
+		}
 
 		return value;
-	},
+	}
 
 	/**
 	 * Return model into raw object without data attributes contained in this.tricare.
 	 * @method getRaw
 	 * @return {Object}					Raw model data
 	 */
-	getRaw: function(){
+	getRaw(){
 		var rawObj = {};
 
 		Lowerdash(this.schema).each(function(properties, path){
@@ -138,7 +145,7 @@ export default SuperModel = Model.extend({
 		}, this);
 
 		return rawObj;
-	},
+	}
 
-	setSchema: function(){}
-});
+	setSchema(){}
+}

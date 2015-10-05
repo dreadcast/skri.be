@@ -1,74 +1,64 @@
-(function(){
-	var
-		s = require('superscore.string'),
-		// md = require('./MarkDownParser'),
-		MediaCollection = require('./../Media/Collection'),
-		Path = require('path'),
-		BaseModel = require('./../Base/Model');
+import { clean, stripTags, truncate } from 'superscore.string';
+import MediaCollection from './../Media/MediaCollection';
+import Path from 'path';
+import SuperModel from './../Base/SuperModel';
+import { merge } from 'lowerdash';
 
-	var ArticleModel = BaseModel.extend({
-		idAttribute: 'id',
-		schema: {
-			title: {
-				change: s.clean
-			},
-			tags: {
-				type: 'array'
-			},
-			created: {
-				type: 'date'
-			},
-			status: {},
-			summary: {
-				compute: function(){
-					var str = this.get('content');
+var schema = {
+	'title': {
+		change: clean
+	},
+	'tags': {
+		type: 'array'
+	},
+	'created': {
+		type: 'date'
+	},
+	'status': {},
+	'path': {},
+	'summary': {
+		compute(){
+			var str = this.get('content');
 
-					str = s.clean(str);
-					str = s.stripTags(str);
-					str = s.truncate(str, 300, '…');
+			str = clean(str);
+			str = stripTags(str);
+			str = truncate(str, 300);
 
-					return str;
-				}
-			},
-			cover: {},
-			medias: {},
-			mediaCollection: {
-				initial: function(){
-					var mediaCollection = new MediaCollection();
-
-					mediaCollection.pathToBlog = this.options.pathToBlog;
-
-					return mediaCollection;
-				}
-			}
-		},
-
-		parse: function(path, cb){
-			var parsedMd = new md(path);
-
-			parsedMd.parseFile(function(rawArticle){
-				this.template = rawArticle.template || this.get('template').html;
-
-				this.get('mediaCollection').addItems(rawArticle.medias, cb);
-				delete rawArticle.medias;
-
-				this.set(rawArticle);
-			}.bind(this));
-
-			return this;
-		},
-
-		toJSON: function(){
-			var rawObj = BaseModel.prototype.toJSON.apply(this);
-
-			rawObj.medias = this.get('mediaCollection').map(function(media, i){
-				return media.toJSON();
-			});
-
-			return rawObj;
+			return str;
 		}
-/*
-*/
-	});
-	module.exports = ArticleModel;
-})();
+	},
+	'cover': {},
+	'medias': {},
+	'mediaCollection': {
+		initial(){
+			var mediaCollection = new MediaCollection();
+			mediaCollection.ArticlePath = this.get('id');
+			mediaCollection.pathToBlog = this.options.pathToBlog;
+
+			return mediaCollection;
+		}
+	}
+};
+
+export default class ArticleModel extends SuperModel {
+	getMedias(){
+		return this.get('mediaCollection')
+			.addItems(this.get('medias'))
+			.catch((message, error) => console.error(message, error));
+	}
+
+	toJSON(){
+		var rawObj = super.toJSON();
+
+		rawObj.medias = this.get('mediaCollection')
+			.map(media => media.toJSON());
+
+		return rawObj;
+	}
+
+	setSchema(){
+		this.schema = merge({}, this.schema, schema);
+
+		return this;
+	}
+}
