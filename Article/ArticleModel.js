@@ -9,14 +9,15 @@ var schema = {
 		change: clean
 	},
 	'tags': {
-		type: 'array'
+		forceType: 'array'
 	},
 	'created': {
-		type: 'date'
+		forceType: 'date'
 	},
 	'status': {},
 	'path': {},
 	'summary': {
+		require: ['content'],
 		compute(){
 			var str = this.get('content');
 

@@ -29,6 +29,7 @@
 
 	"dependencies": {
 		"backbone": "latest",
+		"yamljs": "latest",
 		"backbone.paginator": "latest",
 
 		"bluebird": "latest",

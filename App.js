@@ -1,10 +1,12 @@
 import ArticleCollection from './Article/ArticleCollection';
+import ArticleModel from './Article/ArticleModel';
 import Lowerdash from 'lowerdash';
 import Path from 'path';
 import fs from 'fs-extra';
 import recurse from 'fs-recurse';
 import chokidar from 'chokidar';
 import marked from 'marked';
+import Promise from 'bluebird';
 import FrontMatter from 'front-matter';
 
 var startTime = new Date().getTime();
@@ -41,9 +43,9 @@ export default class Writenode {
 		// console.info(this.articles);
 
 		function md(path){
-			var article;
-
 			return new Promise((resolve, reject) => {
+				console.info('\n\n\n\n---------------------\nParsing article ' + path)
+
 				return fs.readFile(Path.join(pathToBlog, 'data', path, 'data.md'), {
 					encoding: 'utf-8'
 				}, (error, data) => {
@@ -64,23 +66,42 @@ export default class Writenode {
 				}
 
 				attributes.id = path;
-				attributes.content = marked(body);
-				attributes.title = body.match(/#(.*)\n/)[1];
+				var parsedContent = body.match(/#(.*)\n/);
 
-				articles.add(attributes, {
-					pathToBlog
-				});
-				article = articles.get(path);
+				if(parsedContent){
+					attributes.title = parsedContent[1];
+					attributes.content = marked(parsedContent.input.replace(parsedContent[0], ''));
 
-				return article.getMedias();
+				} else {
+					attributes.content = body;
+				}
+
+				var article = new ArticleModel({
+						id: path
+					}, {
+						pathToBlog
+					})
+					.set(attributes);
+
+				articles.add(article);
+
+			//
+			// 	return article.getMedias();
+			// })
+			// .then(medias => {
+				console.info('---------------------\n\n\n\n\n\n');
+
+				return Promise.resolve(1);
 			});
 		}
 
-		Promise.all([
-			md('family-house-dlhe-diely-i'),
-			md('ein-mann-sauna'),
-		])
-			.then(() => console.info(articles.pluck('title')));
+		var paths = [
+			'55x55',
+			// 'aberto-studio-ar-arquitetos',
+			// 'family-house-dlhe-diely-i',
+			// 'ein-mann-sauna',
+		];
+		Promise.each(paths, md);
 
 		return this;
 	}
