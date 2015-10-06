@@ -16,7 +16,13 @@ export default class ArticleCollection extends PageableCollection {
 	tags = [];
 
 	initialize(){
-		this.on('add', article => article.set('template', this.getTemplate('article')));
+		this.on('add', article => {
+			article.on('change:tags', article => {
+				this.addTags(article.get('tags'));
+			});
+
+			article.set('template', this.getTemplate('article'));
+		});
 	}
 
 	addTags(tags){
@@ -30,6 +36,7 @@ export default class ArticleCollection extends PageableCollection {
 
 		if(previousTags != this.tags){
 			this.trigger('changetag', this.tags);
+			console.info('\nARTICLE COLLECTION ADD TAGS\n', this.tags);
 		}
 
 		return this;

@@ -6,7 +6,7 @@ import fs from 'fs-extra';
 import recurse from 'fs-recurse';
 import chokidar from 'chokidar';
 import marked from 'marked';
-import Promise from 'bluebird';
+import Bluebird from 'bluebird';
 import FrontMatter from 'front-matter';
 
 var startTime = new Date().getTime();
@@ -43,7 +43,7 @@ export default class Writenode {
 		// console.info(this.articles);
 
 		function md(path){
-			return new Promise((resolve, reject) => {
+			return new Bluebird((resolve, reject) => {
 				console.info('\n\n\n\n---------------------\nParsing article ' + path)
 
 				return fs.readFile(Path.join(pathToBlog, 'data', path, 'data.md'), {
@@ -85,23 +85,24 @@ export default class Writenode {
 
 				articles.add(article);
 
-			//
-			// 	return article.getMedias();
-			// })
-			// .then(medias => {
+
+				return article.getMedias();
+			})
+			.then(medias => {
 				console.info('---------------------\n\n\n\n\n\n');
 
-				return Promise.resolve(1);
+				return Bluebird.resolve(1);
 			});
 		}
 
 		var paths = [
 			'55x55',
-			// 'aberto-studio-ar-arquitetos',
-			// 'family-house-dlhe-diely-i',
-			// 'ein-mann-sauna',
+			'aberto-studio-ar-arquitetos',
+			'family-house-dlhe-diely-i',
+			'ein-mann-sauna',
 		];
-		Promise.each(paths, md);
+
+		Bluebird.each(paths, md);
 
 		return this;
 	}

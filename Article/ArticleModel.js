@@ -1,6 +1,5 @@
 import { clean, stripTags, truncate } from 'superscore.string';
 import MediaCollection from './../Media/MediaCollection';
-import Path from 'path';
 import SuperModel from './../Base/SuperModel';
 import { merge } from 'lowerdash';
 

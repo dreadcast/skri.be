@@ -3,7 +3,7 @@ import LocalMediaModel from './LocalMediaModel';
 import RemoteMedia from './Model.Remote';
 import Path from 'path';
 import Lowerdash from 'lowerdash';
-import Promise from 'bluebird';
+import Bluebird from 'bluebird';
 
 export default class MediaCollection extends Collection {
 	model(attributes){
@@ -44,6 +44,6 @@ export default class MediaCollection extends Collection {
 		});
 
 
-		return Promise.all(medias);
+		return Bluebird.all(medias);
 	}
 }

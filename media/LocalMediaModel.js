@@ -3,6 +3,7 @@ import Path from 'path';
 import imageinfo from 'imageinfo';
 import fs from 'fs';
 import MediaModel from './MediaModel';
+import Bluebird from 'bluebird';
 
 var schema = {
 	'filename': {
@@ -35,7 +36,7 @@ export default class LocalMediaModel extends MediaModel {
 	request(){
 		var path = Path.join(this.pathToBlog, 'data', this.get('url'));
 
-		return new Promise((resolve, reject) => {
+		return new Bluebird((resolve, reject) => {
 			return fs.readFile(path, (error, data) => {
 				if(error){
 					return reject('Error reading file ' + path, error);
