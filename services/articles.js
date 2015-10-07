@@ -6,12 +6,14 @@ import chokidar from 'chokidar';
 import marked from 'marked';
 import Bluebird from 'bluebird';
 import FrontMatter from 'front-matter';
+import Lowerdash from 'lowerdash';
 
 export default function(Writenode){
     let articles = new ArticleCollection,
-        { pathToBlog, templates } = Writenode.getService('conf');
+        { pathToBlog, defaultTemplates, pathToTheme } = Writenode.getService('conf');
 
-    articles.setTemplates(templates);
+    articles.setDefaultTemplates(defaultTemplates, pathToTheme);
+    // console.info(articles.defaultTemplates);
 
     function readFile(filePath){
         return new Bluebird((resolve, reject) => {
@@ -29,13 +31,14 @@ export default function(Writenode){
     }
 
     function parseMarkdown(rawMarkdown, filePath){
-        let { attributes, body } = FrontMatter(rawMarkdown);
+        let { attributes, body } = FrontMatter(rawMarkdown),
+            articleId = filePath.replace('data/', '').replace('/data.md', '');
 
         if(typeof attributes.tags == 'string'){
             attributes.tags = attributes.tags.split(/,\s?/);
         }
 
-        attributes.id = filePath;
+        attributes.id = articleId;
         var parsedContent = body.match(/#(.*)\n/);
 
         if(parsedContent){
@@ -46,10 +49,24 @@ export default function(Writenode){
             attributes.content = body;
         }
 
-        var article = new ArticleModel({
-            id: filePath
+        let defaultTemplates = articles.getDefaultTemplates('article');
+
+        if(attributes.templates){
+            let articleTemplates = articles.setTemplatesPath(attributes.templates, pathToBlog);
+
+            Lowerdash.assign(attributes.templates, defaultTemplates, articleTemplates);
+        } else {
+            attributes.templates = defaultTemplates;
+        }
+
+        let article = new ArticleModel({
+            id: articleId
         }, {
             pathToBlog
+        });
+
+        article.on('change:tags', article => {
+            articles.addTags(article.get('tags'));
         });
 
         articles.add(article);

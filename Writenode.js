@@ -4,13 +4,15 @@ import Bluebird from 'bluebird';
 
 import conf from './services/conf';
 import articles from './services/articles';
+import views from './services/views';
 import server from './services/server';
 
 let services = {};
 
 
 export function addService(name, service){
-	var args = toArray(arguments).slice(2);
+	let args = toArray(arguments).slice(2);
+
 	args.unshift({
 		getService: getService
 	});
@@ -30,8 +32,7 @@ export function getService(name){
 export function dev(pathToTheme){
 	return addService('conf', conf, pathToTheme)
 		.then(() => addService('articles', articles))
+		// .then(() => addService('asset', asset))
+		.then(() => addService('views', views))
 		.then(() => addService('server', server));
-	// addService('viewManager', viewManager);
-	// addService('assetWatcher', assetWatcher);
-	// addService('devServer', devServer);
 }

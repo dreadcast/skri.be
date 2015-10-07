@@ -12,18 +12,31 @@ var listArticles = function(articles, properties){
 
 export default class ArticleCollection extends PageableCollection {
 	model = ArticleModel;
-	templates = {};
+	defaultTemplates = {};
 	tags = [];
 
-	initialize(){
-		this.on('add', article => {
-			article.on('change:tags', article => {
-				this.addTags(article.get('tags'));
-			});
-
-			article.set('template', this.getTemplate('article'));
-		});
-	}
+	// initialize(){
+	// 	this.on('add', article => {
+	// 		let templates = this.getDefaultTemplates('article');
+	//
+	// 		article
+	// 			.set('templates', templates, {
+	// 				silent: true
+	// 			})
+	// 			.on('change:tags', article => {
+	// 				this.addTags(article.get('tags'));
+	// 			})
+	// 			.on('change:templates', article => {
+	// 				let articleTemplates = this.setTemplatesPath(article.get('templates'), 'mmm/mmm/mmm');
+	//
+	// 				Lowerdash.assign(templates, articleTemplates);
+	//
+	// 				article.set('templates', templates, {
+	// 					silent: true
+	// 				});
+	// 			});
+	// 	});
+	// }
 
 	addTags(tags){
 		var previousTags = this.tags;
@@ -36,23 +49,38 @@ export default class ArticleCollection extends PageableCollection {
 
 		if(previousTags != this.tags){
 			this.trigger('changetag', this.tags);
-			console.info('\nARTICLE COLLECTION ADD TAGS\n', this.tags);
+			// console.info('\nARTICLE COLLECTION ADD TAGS\n', this.tags);
 		}
 
 		return this;
 	}
 
-	getTemplate(part){
-		return this.templates[part];
+	getDefaultTemplates(part){
+		return Lowerdash.clone(this.defaultTemplates[part]);
 	}
 
-	setTemplates(templates){
-		Lowerdash.merge(this.templates, templates);
+	setTemplatesPath(templates, absoluteBasePath){
+		return Lowerdash.mapValues(templates, template => {
+			if(typeof template == 'string'){
+				return Path.join(absoluteBasePath, template);
+
+			} else {
+				return template;
+			}
+		})
+	}
+
+	setDefaultTemplates(templates, absoluteBasePath){
+		this.defaultTemplates = Lowerdash(this.defaultTemplates)
+			.merge(templates)
+			.mapValues(type => this.setTemplatesPath(type, absoluteBasePath))
+			.value();
 	}
 
 	getPostsTagged(tag){
 		var articles = this.filter(article => Lowerdash.contains(article.get('tags'), tag));
 
+		return articles;
 		return listArticles(articles, {
 			tag: tag
 		});

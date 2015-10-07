@@ -1,7 +1,7 @@
 import { clean, stripTags, truncate } from 'superscore.string';
 import MediaCollection from './../Media/MediaCollection';
 import SuperModel from './../Base/SuperModel';
-import { merge } from 'lowerdash';
+import { merge, omit } from 'lowerdash';
 
 var schema = {
 	'title': {
@@ -48,12 +48,13 @@ export default class ArticleModel extends SuperModel {
 	}
 
 	toJSON(){
-		var rawObj = super.toJSON();
+		var rawObj = this.attributes;//super.toJSON();
 
 		rawObj.medias = this.get('mediaCollection')
-			.map(media => media.toJSON());
+			// .map(media => media.toJSON());
+			.map(media => media.attributes);
 
-		return rawObj;
+		return omit(rawObj, 'mediaCollection');
 	}
 
 	setSchema(){

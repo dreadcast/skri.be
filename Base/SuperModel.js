@@ -20,25 +20,25 @@ export default class SuperModel extends Model {
 						silent: true
 					});
 
-					console.info('\nAUTO CHANGE: "' + model.get('id') + '" ' + field + '\n-> ', model.get(field));
+					// console.info('\nAUTO CHANGE: "' + model.get('id') + '" ' + field + '\n-> ', model.get(field));
 				});
 
 			} else if(forceType) {
 				this.on('change:' + field, model => {
 					model.cast(field);
 
-					console.info(
-						'\nCAST: "' + model.get('id') + '" ' +
-						field + ' field to type ' + forceType + '\n-> ',
-						model.get(field)
-					);
+					// console.info(
+					// 	'\nCAST: "' + model.get('id') + '" ' +
+					// 	field + ' field to type ' + forceType + '\n-> ',
+					// 	model.get(field)
+					// );
 				});
 			}
 
 			if(initial && (this.hasAll(require) || !require)){
 				this.set(field, Lowerdash.isFunction(initial) ? initial.call(this) : initial);
 
-				console.info('\nSET INITIAL: "' + this.get('id') + '" ' + field + ' field \n-> ', this.get(field));
+				// console.info('\nSET INITIAL: "' + this.get('id') + '" ' + field + ' field \n-> ', this.get(field));
 			}
 		});
 
@@ -57,7 +57,7 @@ export default class SuperModel extends Model {
 		if(compute && (this.hasAll(require) || !require)){
 			this.set(field, compute.call(this));
 
-			console.info('\nCOMPUTE: "' + this.get('id') + '" ' + field + '\n-> ', this.get(field));
+			// console.info('\nCOMPUTE: "' + this.get('id') + '" ' + field + '\n-> ', this.get(field));
 		}
 
 		return this;

@@ -12,6 +12,8 @@ export default function(Writenode, pathToTheme){
     	},
 		theme = require(pathToTheme);
 
+    pathToTheme = Path.dirname(pathToTheme);
+
 	conf = merge({ pathToTheme }, defaultConf);
 
 	merge(conf, defaultConf, theme.config, require(Path.join(conf.pathToBlog, 'package')).config, {
