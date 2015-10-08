@@ -10,8 +10,8 @@ export default function(Writenode){
         let changeHandlers = {},
             { pathToBlog, pathToTheme } = Writenode.getService('conf');
 
-        function onChangeHandler(matcher, handler){
-            types.forEach(type => changeHandlers[matcher] = handler);
+        function addChangeHandler(matcher, handler){
+            changeHandlers[matcher] = handler;
         }
 
         let watcher = chokidar.watch([
@@ -32,7 +32,7 @@ export default function(Writenode){
             })
             .on('ready', () => {
                 return resolve({
-                    onChangeHandler,
+                    addChangeHandler,
                     watcher
                 });
             });
