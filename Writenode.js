@@ -10,12 +10,20 @@ import assets from './services/assets';
 
 let services = {};
 
+var timer = {};
+
+timestamp('start');
+
+function timestamp(label){
+	timer[label] = Date.now();
+}
 
 export function addService(name, service){
 	let args = toArray(arguments).slice(2);
 
 	args.unshift({
-		getService: getService
+		getService,
+		timestamp
 	});
 
 	return service.apply(this, args)
@@ -35,5 +43,9 @@ export function dev(pathToTheme){
 		.then(() => addService('articles', articles))
 		.then(() => addService('assets', assets))
 		.then(() => addService('views', views))
-		.then(() => addService('server', server));
+		.then(() => addService('server', server))
+		.then(() => {
+			timestamp('end');
+			console.info(timer, (timer.end - timer.start) + 'ms');
+		});
 }

@@ -11,7 +11,8 @@ import Lowerdash from 'lowerdash';
 export default function(Writenode){
     let articles = new ArticleCollection,
         readFile = Bluebird.promisify(fs.readFile),
-        { pathToBlog, defaultTemplates, pathToTheme } = Writenode.getService('conf');
+        { timestamp, getService } = Writenode,
+        { pathToBlog, defaultTemplates, pathToTheme } = getService('conf');
 
     articles.setDefaultTemplates(defaultTemplates, pathToTheme);
 
@@ -80,7 +81,11 @@ export default function(Writenode){
 
         watcher.on('ready', () => {
             return Bluebird.each(queue, handleFileChange)
-                .then(() => resolve(articles));
+                .then(() => {
+                    timestamp('Done articles');
+
+                    return resolve(articles);
+                });
         });
         watcher.on('add', filePath => queue.push(filePath));
         watcher.on('change', handleFileChange);
