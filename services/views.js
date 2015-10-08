@@ -5,70 +5,72 @@ import Bluebird from 'bluebird';
 import Lowerdash from 'lowerdash';
 import nunjucks from 'nunjucks';
 import swig from 'swig';
+import chokidar from 'chokidar';
 
 export default function(Writenode){
     return new Bluebird((resolve, reject) => {
-        let precompiledTemplates = {},
+        let readFile = Bluebird.promisify(fs.readFile),
+            precompiledTemplates = {},
             { defaultTemplates, pathToBlog, pathToTheme } = Writenode.getService('conf');
 
-        function precompile(template){
-            if(precompiledTemplates[template]){
-                return Bluebird.resolve(precompiledTemplates[template]);
-            }
 
-            switch(Path.extname(template)){
-                case '.nun':
-                case '.nunj':
-                case '.nunjucks':
-                    return new Bluebird((resolve, reject) => {
-                        fs.readFile(template, {
-                            encoding: 'utf-8'
-                        }, (error, data) => {
-                            if(error){
-                                reject(error)
+        function precompile(pathToTemplate){
+            if(precompiledTemplates[pathToTemplate]){
+                // console.info('Skip precompile template: ', pathToTemplate);
 
-                            } else {
-                                let render = nunjucks.compile(data, null, template).render;
-                                precompiledTemplates[template] = render;
+                return Bluebird.resolve(precompiledTemplates[pathToTemplate]);
 
-                                return resolve(render);
-                            }
-                        })
-                    });
-                    break;
+            } else {
+                // console.info('Precompile template: ', pathToTemplate);
 
-                case '.twig':
-                case '.swig':
-                    return new Bluebird((resolve, reject) => {
+                switch(Path.extname(pathToTemplate)){
+                    case '.nun':
+                    case '.nunj':
+                    case '.nunjucks':
+                        return readFile(pathToTemplate, {
+                                encoding: 'utf-8'
+                            })
+                            .then(data => {
+                                let render = nunjucks.compile(data, null, pathToTemplate).render;
+                                precompiledTemplates[pathToTemplate] = render;
 
-                        var render = swig.compileFile(template, {
-                			filename: template
-                		});
-                        precompiledTemplates[template] = render;
-                        return resolve(render);
-                    });
-                    break;
+                                return render;
+                            });
+                        break;
 
-                case '.jade':
-                    return jade;
-                    break;
+                    case '.twig':
+                    case '.swig':
+                        return new Bluebird((resolve, reject) => {
+                            var render = swig.compileFile(pathToTemplate, {
+                    			filename: pathToTemplate
+                    		});
+                            precompiledTemplates[pathToTemplate] = render;
 
-                case '.haml':
-                case '.hml':
-                    return haml;
-                    break;
+                            return resolve(render);
+                        });
+                        break;
 
-                case '.ejs':
-                    return ejs;
-                    break;
+                    case '.jade':
+                        return jade;
+                        break;
 
-                case '.hbs':
-                    return hbs;
-                    break;
+                    case '.haml':
+                    case '.hml':
+                        return haml;
+                        break;
 
-                case '.mustache':
-                    return mustache;
-                    break;
+                    case '.ejs':
+                        return ejs;
+                        break;
+
+                    case '.hbs':
+                        return hbs;
+                        break;
+
+                    case '.mustache':
+                        return mustache;
+                        break;
+                }
             }
         }
 
@@ -84,11 +86,22 @@ export default function(Writenode){
             return precompile(template).then(render => render(data));
         }
 
-        return resolve({
-            defaultTemplates,
-            render,
-            renderJson,
-            renderJsonList,
-        });
+        let watcher = chokidar.watch([
+            pathToTheme + '/partial',
+            pathToTheme + '/tpl',
+        ])
+            .on('change', path => {
+                // console.info('Flush precompiled templates');
+
+                precompiledTemplates = {}
+            })
+            .on('ready', () => {
+                return resolve({
+                    defaultTemplates,
+                    render,
+                    renderJson,
+                    renderJsonList,
+                });
+            });
     });
 }

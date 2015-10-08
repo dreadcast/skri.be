@@ -37,7 +37,7 @@ export default function(Writenode){
         let defaultTemplates = articles.getDefaultTemplates('article');
 
         if(attributes.templates){
-            let articleTemplates = articles.setTemplatesPath(attributes.templates, pathToBlog);
+            let articleTemplates = articles.setTemplatesPath(attributes.templates, pathToTheme);
 
             Lowerdash.assign(attributes.templates, defaultTemplates, articleTemplates);
         } else {

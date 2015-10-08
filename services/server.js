@@ -27,8 +27,14 @@ export default function(Writenode){
 				},
                 responseData = {};
 
+			console.info(params);
+
             if(articles.tags.indexOf(params.path) > -1){
-                responseData.articles = views.renderJsonList(articles.toJSON().filter(article => Lowerdash.contains(article.tags, params.path)), articles.defaultTemplates.posts[params.type]);
+				var filteredArticles = articles
+					.toJSON()
+					.filter(article => Lowerdash.contains(article.tags, params.path));
+
+				responseData.articles = views.renderJsonList(filteredArticles, articles.defaultTemplates.posts[params.type]);
             }
 
             if(articles.pluck('id').indexOf(params.path) > -1){

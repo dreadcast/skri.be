@@ -15,29 +15,6 @@ export default class ArticleCollection extends PageableCollection {
 	defaultTemplates = {};
 	tags = [];
 
-	// initialize(){
-	// 	this.on('add', article => {
-	// 		let templates = this.getDefaultTemplates('article');
-	//
-	// 		article
-	// 			.set('templates', templates, {
-	// 				silent: true
-	// 			})
-	// 			.on('change:tags', article => {
-	// 				this.addTags(article.get('tags'));
-	// 			})
-	// 			.on('change:templates', article => {
-	// 				let articleTemplates = this.setTemplatesPath(article.get('templates'), 'mmm/mmm/mmm');
-	//
-	// 				Lowerdash.assign(templates, articleTemplates);
-	//
-	// 				article.set('templates', templates, {
-	// 					silent: true
-	// 				});
-	// 			});
-	// 	});
-	// }
-
 	addTags(tags){
 		var previousTags = this.tags;
 
