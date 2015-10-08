@@ -10,25 +10,10 @@ import Lowerdash from 'lowerdash';
 
 export default function(Writenode){
     let articles = new ArticleCollection,
+        readFile = Bluebird.promisify(fs.readFile),
         { pathToBlog, defaultTemplates, pathToTheme } = Writenode.getService('conf');
 
     articles.setDefaultTemplates(defaultTemplates, pathToTheme);
-    // console.info(articles.defaultTemplates);
-
-    function readFile(filePath){
-        return new Bluebird((resolve, reject) => {
-            return fs.readFile(filePath, {
-                encoding: 'utf-8'
-            }, (error, data) => {
-                if(error){
-                    return reject(error);
-
-                } else {
-                    return resolve(data);
-                }
-            });
-        })
-    }
 
     function parseMarkdown(rawMarkdown, filePath){
         let { attributes, body } = FrontMatter(rawMarkdown),
@@ -60,7 +45,8 @@ export default function(Writenode){
         }
 
         let article = new ArticleModel({
-            id: articleId
+            id: articleId,
+            url: articleId
         }, {
             pathToBlog
         });
@@ -84,7 +70,9 @@ export default function(Writenode){
             queue = [];
 
         function handleFileChange(filePath){
-            return readFile(filePath)
+            return readFile(filePath, {
+                    encoding: 'utf-8'
+                })
                 .catch(error => console.error(error))
                 .then(rawMarkdown => parseMarkdown(rawMarkdown, Path.relative(pathToBlog, filePath)));
         }

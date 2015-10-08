@@ -6,6 +6,7 @@ import conf from './services/conf';
 import articles from './services/articles';
 import views from './services/views';
 import server from './services/server';
+import assets from './services/assets';
 
 let services = {};
 
@@ -32,7 +33,7 @@ export function getService(name){
 export function dev(pathToTheme){
 	return addService('conf', conf, pathToTheme)
 		.then(() => addService('articles', articles))
-		// .then(() => addService('asset', asset))
+		.then(() => addService('assets', assets))
 		.then(() => addService('views', views))
 		.then(() => addService('server', server));
 }

@@ -53,6 +53,11 @@ export default function(Writenode){
                     return jade;
                     break;
 
+                case '.haml':
+                case '.hml':
+                    return haml;
+                    break;
+
                 case '.ejs':
                     return ejs;
                     break;
@@ -72,7 +77,7 @@ export default function(Writenode){
         }
 
         function renderJsonList(data, template){
-            return Lowerdash.map(data, item => Lowerdash.pick(item, template.json));
+            return Lowerdash.map(data, item => Lowerdash.pick(item, template));
         }
 
         function render(template, data){
