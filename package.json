@@ -62,7 +62,7 @@
 		"open": "0.0.5",
 		"moment": "2.9.0",
 
-		"anymatch": "1.1.0",
+		"anymatch": "latest",
 		"chokidar": "latest",
 		"lowerdash": "latest"
 	},

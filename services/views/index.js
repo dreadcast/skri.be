@@ -1,16 +1,15 @@
 import Path from 'path';
 import fs from 'fs-extra';
-import recurse from 'fs-recurse';
 import Bluebird from 'bluebird';
 import Lowerdash from 'lowerdash';
-import nunjucks from 'nunjucks';
-import swig from 'swig';
-import chokidar from 'chokidar';
+import nunjucks from './nunjucks';
+import twig from './twig';
 
 export default function(Writenode){
-    return new Bluebird((resolve, reject) => {
+    // return new Bluebird((resolve, reject) => {
         let readFile = Bluebird.promisify(fs.readFile),
             precompiledTemplates = {},
+            watcher = Writenode.getService('watcher'),
             { defaultTemplates, pathToBlog, pathToTheme } = Writenode.getService('conf');
 
 
@@ -23,31 +22,18 @@ export default function(Writenode){
             } else {
                 // console.info('Precompile template: ', pathToTemplate);
 
+                let render;
+
                 switch(Path.extname(pathToTemplate)){
                     case '.nun':
                     case '.nunj':
                     case '.nunjucks':
-                        return readFile(pathToTemplate, {
-                                encoding: 'utf-8'
-                            })
-                            .then(data => {
-                                let render = nunjucks.compile(data, null, pathToTemplate).render;
-                                precompiledTemplates[pathToTemplate] = render;
-
-                                return render;
-                            });
+                        render = nunjucks(pathToTemplate);
                         break;
 
                     case '.twig':
                     case '.swig':
-                        return new Bluebird((resolve, reject) => {
-                            var render = swig.compileFile(pathToTemplate, {
-                    			filename: pathToTemplate
-                    		});
-                            precompiledTemplates[pathToTemplate] = render;
-
-                            return resolve(render);
-                        });
+                        render = twig(pathToTemplate);
                         break;
 
                     case '.jade':
@@ -71,6 +57,8 @@ export default function(Writenode){
                         return mustache;
                         break;
                 }
+
+                return render.then(rendered => precompiledTemplates[pathToTemplate] = rendered);
             }
         }
 
@@ -86,22 +74,21 @@ export default function(Writenode){
             return precompile(template).then(render => render(data));
         }
 
-        let watcher = chokidar.watch([
-            pathToTheme + '/partial',
-            pathToTheme + '/tpl',
-        ])
-            .on('change', path => {
-                // console.info('Flush precompiled templates');
+        function flush(){
+            // console.info('Flush precompiled templates');
 
-                precompiledTemplates = {}
-            })
-            .on('ready', () => {
-                return resolve({
-                    defaultTemplates,
-                    render,
-                    renderJson,
-                    renderJsonList,
-                });
-            });
-    });
+            precompiledTemplates = {}
+        }
+
+        watcher.addChangeHandler([
+            pathToTheme + '/partial/**/*',
+            pathToTheme + '/tpl/**/*',
+        ], flush);
+
+        return Bluebird.resolve({
+            defaultTemplates,
+            render,
+            renderJson,
+            renderJsonList,
+        });
 }

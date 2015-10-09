@@ -3,15 +3,15 @@ import fs from 'fs-extra';
 import Bluebird from 'bluebird';
 import Lowerdash from 'lowerdash';
 import chokidar from 'chokidar';
-import { anymatch } from 'seperscore.string';
+import anymatch from 'anymatch';
 
 export default function(Writenode){
     return new Bluebird((resolve, reject) => {
-        let changeHandlers = {},
+        let changeHandlers = new Map,
             { pathToBlog, pathToTheme } = Writenode.getService('conf');
 
         function addChangeHandler(matcher, handler){
-            changeHandlers[matcher] = handler;
+            changeHandlers.set(matcher, handler);
         }
 
         let watcher = chokidar.watch([
@@ -19,11 +19,9 @@ export default function(Writenode){
             pathToBlog + '/data/**/data.md',
         ])
             .on('change', path => {
-                var type = Path.extname(path).replace('.', '');
+                // console.info('WATCHER CHANGE: ', path);
 
-                console.info('WATCHER CHANGE: ', path);
-
-                Lowerdash.each(changeHandlers, (changeHandler, matcher) => {
+                changeHandlers.forEach((changeHandler, matcher) => {
                     if(anymatch(matcher, path)){
                         changeHandler(path);
                     };
