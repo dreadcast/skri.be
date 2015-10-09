@@ -6,13 +6,13 @@ import less from './less';
 import es from './es';
 
 // import babel from 'babel';
-var babel = require('babel');
+var babel = require('babel'),
+	readFile = Bluebird.promisify(fs.readFile);
 
 export default function(Writenode){
 	return Writenode.addService('less', less)
 	    .then(() => Writenode.addService('es', es))
 		.then(() => {
-			let readFile = Bluebird.promisify(fs.readFile);
 
 		    function process(path){
 		        switch(Path.extname(path)){

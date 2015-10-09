@@ -1,11 +1,12 @@
 import Bluebird from 'bluebird';
-var babel = require('babel');
+
+var babel = require('babel'),
+    transpile = Bluebird.promisify(babel.transformFile),
+	transpiled = {};
 
 export default function(Writenode){
 	let watcher = Writenode.getService('watcher'),
-        { pathToTheme } = Writenode.getService('conf'),
-        transpile = Bluebird.promisify(babel.transformFile),
-		transpiled = {};
+        { pathToTheme } = Writenode.getService('conf');
 
     function process(path){
         return transpile(path, {

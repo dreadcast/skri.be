@@ -3,14 +3,15 @@ import Bluebird from 'bluebird';
 import LessPluginAutoPrefix from 'less-plugin-autoprefix';
 import less from 'less';
 
+var autoprefixPlugin = new LessPluginAutoPrefix({
+		browsers: ['last 2 versions']
+	}),
+	readFile = Bluebird.promisify(fs.readFile),
+	lessed = {};
+
 export default function(Writenode){
 	let watcher = Writenode.getService('watcher'),
-        { pathToTheme } = Writenode.getService('conf'),
-        autoprefixPlugin = new LessPluginAutoPrefix({
-    		browsers: ['last 2 versions']
-    	}),
-        readFile = Bluebird.promisify(fs.readFile),
-        lessed = {};
+        { pathToTheme } = Writenode.getService('conf');
 
     function process(path){
         if(lessed[path]){
