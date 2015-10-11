@@ -1,0 +1,11 @@
+
+.flt{
+	display: inline-block;
+	vertical-align: top;
+	box-sizing: border-box;
+}
+.vcenter{
+	transform: translateY(-50%);
+	position: relative;
+	top: 50%;
+}

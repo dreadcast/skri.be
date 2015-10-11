@@ -34,6 +34,7 @@ export default function(Writenode){
 					.toJSON()
 					.filter(article => Lowerdash.contains(article.tags, params.path));
 
+				console.info(articles.defaultTemplates.posts[params.type])
 				responseData.articles = views.renderJsonList(filteredArticles, articles.defaultTemplates.posts[params.type]);
             }
 

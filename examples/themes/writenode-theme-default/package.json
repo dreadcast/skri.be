@@ -1,0 +1,34 @@
+{
+	"name": "writenode-theme-default",
+	"version": "0.0.1",
+	"homepage": "http://writeno.de",
+	"description": "Default theme for Writenode",
+	"author": {
+		"name": "Raphael Gully",
+		"website": "http://dreadcast.com"
+	},
+
+	"repository": {
+		"type": "git",
+		"url": "git@bitbucket.org:dreadcast/writenode.git"
+	},
+
+	"main": "package.json",
+
+	"config": {
+		"defaultTemplates": {
+			"posts": {
+				"html": "tpl/posts.twig",
+				"json": ["title", "id"]
+			},
+			"article": {
+				"ajax": "partial/article.twig",
+				"html": "tpl/article.twig",
+				"json": ["title", "id", "content", "medias", "created", "status", "tags", "summary"]
+			}
+		},
+
+		"perPage": 20,
+		"feedLength": 50
+	}
+}
