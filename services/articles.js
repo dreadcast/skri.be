@@ -2,7 +2,6 @@ import ArticleCollection from './../Article/ArticleCollection';
 import ArticleModel from './../Article/ArticleModel';
 import Path from 'path';
 import fs from 'fs-extra';
-import chokidar from 'chokidar';
 import marked from 'marked';
 import Bluebird from 'bluebird';
 import FrontMatter from 'front-matter';
