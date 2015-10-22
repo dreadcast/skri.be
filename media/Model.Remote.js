@@ -1,5 +1,5 @@
 ;(function(){
-	var _ = require('hidash'),
+	var _ = require('Lowerdash'),
 		MediaModel = require('./MediaModel'),
 		request = require('request'),
 		schema = {
