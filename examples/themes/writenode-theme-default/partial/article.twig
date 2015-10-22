@@ -1,0 +1,30 @@
+<header>
+	<a id="back-to-posts" class="resp-link icon-arrow-left" href="/{{ currentTag }}" data-tag="{{ currentTag }}">Posts</a>
+	<h1>{{ article.title }}</h1>
+	<ul class="post-tags">
+		{% for tag in article.tags %}
+			<li class="flt"><a href="/{{ tag }}" rel="tag" data-tag="{{ tag }}">{{ tag }}</a></li>
+		{% endfor %}
+	</ul>
+</header>
+
+{{ article.content|raw }}
+
+{% if article.medias %}
+	<footer>
+		<ul class="media-list">
+			{% for url, media in article.medias %}
+				<li class="flt media-item">
+					<a href="{{ media.url }}" class="flt">
+						<span class="hidden">{{ media.title }} - ratio: {{ media.ratioName }}, round : {{ media.ratioRound }}</span>
+					</a>
+				</li>
+			{% endfor %}
+		</ul>
+	</footer>
+{% endif %}
+{% autoescape false %}
+	<script>
+		Converge.currentPost = {{ article|json_encode }};
+	</script>
+{% endautoescape %}

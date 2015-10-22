@@ -20,6 +20,10 @@ function timestamp(label){
 }
 
 export function addService(name, service){
+	if(services[name]){
+		return Bluebird.resolve(services[name]);
+	}
+
 	let args = toArray(arguments).slice(2);
 
 	args.unshift({
@@ -32,7 +36,7 @@ export function addService(name, service){
 		.then(serviceData => {
 			services[name] = serviceData;
 
-			return Promise.resolve(serviceData);
+			return serviceData;
 		});
 }
 

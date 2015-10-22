@@ -3,6 +3,10 @@ import Path from 'path';
 import Bluebird from 'bluebird';
 
 export default function(Writenode, pathToTheme){
+    pathToTheme = Path.resolve(pathToTheme);
+
+    console.info(pathToTheme)
+
     let services = {},
     	conf = {},
     	defaultConf = {
@@ -12,7 +16,7 @@ export default function(Writenode, pathToTheme){
     	},
 		theme = require(pathToTheme);
 
-    pathToTheme = Path.dirname(pathToTheme);
+    // pathToTheme = Path.dirname(pathToTheme);
 
 	conf = merge({ pathToTheme }, defaultConf);
 

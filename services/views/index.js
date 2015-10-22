@@ -6,89 +6,87 @@ import nunjucks from './nunjucks';
 import twig from './twig';
 
 export default function(Writenode){
-    // return new Bluebird((resolve, reject) => {
-        let readFile = Bluebird.promisify(fs.readFile),
-            precompiledTemplates = {},
-            watcher = Writenode.getService('watcher'),
-            { defaultTemplates, pathToBlog, pathToTheme } = Writenode.getService('conf');
+    let readFile = Bluebird.promisify(fs.readFile),
+        precompiledTemplates = {},
+        watcher = Writenode.getService('watcher'),
+        { defaultTemplates, pathToBlog, pathToTheme } = Writenode.getService('conf');
 
+    function precompile(pathToTemplate){
+        if(precompiledTemplates[pathToTemplate]){
+            // console.info('Skip precompile template: ', pathToTemplate);
 
-        function precompile(pathToTemplate){
-            if(precompiledTemplates[pathToTemplate]){
-                // console.info('Skip precompile template: ', pathToTemplate);
+            return Bluebird.resolve(precompiledTemplates[pathToTemplate]);
 
-                return Bluebird.resolve(precompiledTemplates[pathToTemplate]);
+        } else {
+            // console.info('Precompile template: ', pathToTemplate);
 
-            } else {
-                // console.info('Precompile template: ', pathToTemplate);
+            let render;
 
-                let render;
+            switch(Path.extname(pathToTemplate)){
+                case '.nun':
+                case '.nunj':
+                case '.nunjucks':
+                    render = nunjucks(pathToTemplate);
+                    break;
 
-                switch(Path.extname(pathToTemplate)){
-                    case '.nun':
-                    case '.nunj':
-                    case '.nunjucks':
-                        render = nunjucks(pathToTemplate);
-                        break;
+                case '.twig':
+                case '.swig':
+                    render = twig(pathToTemplate);
+                    break;
 
-                    case '.twig':
-                    case '.swig':
-                        render = twig(pathToTemplate);
-                        break;
+                case '.jade':
+                    return jade;
+                    break;
 
-                    case '.jade':
-                        return jade;
-                        break;
+                case '.haml':
+                case '.hml':
+                    return haml;
+                    break;
 
-                    case '.haml':
-                    case '.hml':
-                        return haml;
-                        break;
+                case '.ejs':
+                    return ejs;
+                    break;
 
-                    case '.ejs':
-                        return ejs;
-                        break;
+                case '.hbs':
+                    return hbs;
+                    break;
 
-                    case '.hbs':
-                        return hbs;
-                        break;
-
-                    case '.mustache':
-                        return mustache;
-                        break;
-                }
-
-                return render.then(rendered => precompiledTemplates[pathToTemplate] = rendered);
+                case '.mustache':
+                    return mustache;
+                    break;
             }
+
+            return render.then(rendered => precompiledTemplates[pathToTemplate] = rendered);
         }
+    }
 
-        function renderJson(data, template){
-            return Lowerdash.pick(data, template.json);
-        }
+    function renderJson(data, template){
+        return Lowerdash.pick(data, template.json);
+    }
 
-        function renderJsonList(data, template){
-            return Lowerdash.map(data, item => Lowerdash.pick(item, template));
-        }
+    function renderJsonList(data, template){
+        return Lowerdash.map(data, item => Lowerdash.pick(item, template));
+    }
 
-        function render(template, data){
-            return precompile(template).then(render => render(data));
-        }
+    function render(template, data){
+        return precompile(template).then(render => render(data));
+    }
 
-        function flush(){
-            // console.info('Flush precompiled templates');
+    function flush(){
+        // console.info('Flush precompiled templates');
 
-            precompiledTemplates = {}
-        }
+        precompiledTemplates = {}
+    }
 
-        watcher.addChangeHandler([
-            pathToTheme + '/partial/**/*',
-            pathToTheme + '/tpl/**/*',
-        ], flush);
+    watcher.addChangeHandler([
+        pathToTheme + '/partial/**/*',
+        pathToTheme + '/tpl/**/*',
+    ], flush);
 
-        return Bluebird.resolve({
-            defaultTemplates,
-            render,
-            renderJson,
-            renderJsonList,
-        });
+    return Bluebird.resolve({
+        defaultTemplates,
+        render,
+        renderJson,
+        renderJsonList,
+    });
 }

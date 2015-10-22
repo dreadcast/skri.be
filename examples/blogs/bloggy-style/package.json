@@ -1,0 +1,49 @@
+{
+	"name": "Converge",
+	"version": "0.0.1",
+	"homepage": "http://converge.fr",
+	"description": "Converge blog",
+	"author": {
+		"name": "Raphael Gully",
+		"website": "http://dreadcast.com"
+	},
+	
+	"repository": {
+		"type": "git",
+		"url": "git@bitbucket.org:dreadcast/converge-data.git"
+	},
+	
+	"bugs": {
+		"url": "https://github.com/dreadcast/writenode/issues"
+	},
+	
+	"dependencies": {
+		"writenode": "latest",
+		"writenode-theme-converge": "git@bitbucket.org:dreadcast/converge-theme.git"
+	},
+	
+	"main": "./start.js",
+	
+	"scripts": {
+		"start": "nodemon start.js"
+	},
+	
+	"config": {
+		"port": 8084,
+		"testPort": 8085,
+		
+		"site": {
+			"theme": {
+				"perPage": 20,
+				"feedLength": 50
+			},
+			"title": "Converge - architecture, product design, landscape &amp; more",
+			"description": "Converge blog is about architecture, product or furniture design, mobility, urbanisme, landscape, art, fashion &amps; a lot more.",
+			"featuredTags": [
+				"architecture", "japan", "cabins", "products", "outdoor", "mobility",
+				"furniture", "mountain", "graphic", "pack", "sport", "switzerland",
+				"lumber", "concrete", "urban", "lake", "fashion"
+			]
+		}
+	}
+}
