@@ -17,7 +17,9 @@ export default function(Writenode){
         let watcher = chokidar.watch([
             pathToTheme,
             pathToBlog + '/data/**/data.md',
-        ])
+        ], {
+			ignored: '.git/**'
+		})
             .on('change', path => {
                 // console.info('WATCHER CHANGE: ', path);
 
