@@ -44,16 +44,17 @@ export default function(Writenode){
         }
     }
 
-    watcher.addChangeHandler([
+    return watcher.addChangeHandler([
         pathToTheme + '/css/**/*',
         pathToTheme + '/less/**/*'
     ], path => {
-        console.info('Flush compiled less');
+        // console.info('Flush compiled less');
 
         lessed = {};
-    });
-
-    return Bluebird.resolve({
-        process
-    });
+    })
+		.then(queued => {
+	        return {
+				process
+			};
+	    });
 }

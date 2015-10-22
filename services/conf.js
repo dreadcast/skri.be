@@ -3,9 +3,7 @@ import Path from 'path';
 import Bluebird from 'bluebird';
 
 export default function(Writenode, pathToTheme){
-    pathToTheme = Path.resolve(pathToTheme);
-
-    console.info(pathToTheme)
+    pathToTheme = Path.dirname(Path.resolve(pathToTheme));
 
     let services = {},
     	conf = {},

@@ -7,11 +7,17 @@ import anymatch from 'anymatch';
 
 export default function(Writenode){
     return new Bluebird((resolve, reject) => {
-        let changeHandlers = new Map,
+        let queue = [],
+			changeHandlers = new Map,
             { pathToBlog, pathToTheme } = Writenode.getService('conf');
 
-        function addChangeHandler(matcher, handler){
-            changeHandlers.set(matcher, handler);
+		// Add change handler
+		// Returns a promise that resolves when all matching queued paths where first handled
+		function addChangeHandler(matchers, changeHandler){
+			var matcher = anymatch(matchers);
+
+			return Bluebird.each(queue.filter(matcher), filePath => changeHandler(filePath))
+				.then(queued => changeHandlers.set(matchers, changeHandler));
         }
 
         let watcher = chokidar.watch([
@@ -20,11 +26,12 @@ export default function(Writenode){
         ], {
 			ignored: '.git/**'
 		})
+            .on('add', filePath => queue.push(filePath))
             .on('change', path => {
                 // console.info('WATCHER CHANGE: ', path);
 
-                changeHandlers.forEach((changeHandler, matcher) => {
-                    if(anymatch(matcher, path)){
+                changeHandlers.forEach((changeHandler, matchers) => {
+                    if(anymatch(matchers, path)){
                         changeHandler(path);
                     };
                 });
@@ -33,7 +40,8 @@ export default function(Writenode){
             .on('ready', () => {
                 return resolve({
                     addChangeHandler,
-                    watcher
+                    watcher,
+					queue,
                 });
             });
     });

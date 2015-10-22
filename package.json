@@ -38,6 +38,7 @@
 		"less": "latest",
 		"less-plugin-autoprefix": "1.1.0",
 
+		"swig": "latest",
 		"nunjucks": "latest",
 		"html-minifier": "latest",
 		"node-useref": "latest",
@@ -64,11 +65,11 @@
 
 		"anymatch": "latest",
 		"chokidar": "latest",
-		"lowerdash": "latest"
+		"lowerdash": "0.4.0-draft-3",
+		"lodash": "latest"
 	},
 
 	"devDependencies": {
-		"dreadcast-operative": "latest",
 		"nodemon": ">=1.0.14"
 	},
 

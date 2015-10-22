@@ -78,15 +78,16 @@ export default function(Writenode){
         precompiledTemplates = {}
     }
 
-    watcher.addChangeHandler([
+    return watcher.addChangeHandler([
         pathToTheme + '/partial/**/*',
         pathToTheme + '/tpl/**/*',
-    ], flush);
-
-    return Bluebird.resolve({
-        defaultTemplates,
-        render,
-        renderJson,
-        renderJsonList,
+    ], flush)
+	.then(queued => {
+        return {
+			defaultTemplates,
+	        render,
+	        renderJson,
+	        renderJsonList,
+		}
     });
 }

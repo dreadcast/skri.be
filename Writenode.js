@@ -19,12 +19,10 @@ function timestamp(label){
 	timer[label] = Date.now();
 }
 
-export function addService(name, service){
+export function addService(name, service, ...args){
 	if(services[name]){
 		return Bluebird.resolve(services[name]);
 	}
-
-	let args = toArray(arguments).slice(2);
 
 	args.unshift({
 		addService,

@@ -35,18 +35,17 @@ export default function(Writenode){
             attributes.content = body;
         }
 
-		attributes = setArticleTemplates(attributes);
+		if(attributes.medias && Array.isArray(attributes.medias)){
+			var medias = {};
 
-		let article = setArticleAttributes(attributes);
+			attributes.medias.forEach(media => {
+				medias[media.url] = media;
+			});
 
-		return lookupArticleMedias(attributes)
-			.then(attributes => {
-		        articles.add(article);
-		        article.set(attributes);
+			attributes.medias = medias;
+		}
 
-				return article;
-			})
-			.then(article => article.getMedias());
+		return Bluebird.resolve(attributes);
     }
 
 	function setArticleAttributes(attributes){
@@ -61,7 +60,7 @@ export default function(Writenode){
             articles.addTags(article.get('tags'));
         });
 
-		return article;
+		return Bluebird.resolve({ attributes, article });
     }
 
 	function setArticleTemplates(attributes){
@@ -75,7 +74,7 @@ export default function(Writenode){
             attributes.templates = defaultTemplates;
         }
 
-		return attributes;
+		return Bluebird.resolve(attributes);
     }
 
 	function lookupArticleMedias(attributes){
@@ -87,7 +86,7 @@ export default function(Writenode){
 
 				Lowerdash.chain(files)
 					.filter(file => !Lowerdash.contains(['data.md'], file))
-					.filter(file => !Lowerdash.some(attributes.medias, media => media.url != file))
+					.filter(file => !Lowerdash.some(attributes.medias, media => media.url == file))
 					.each(file => {
 						attributes.medias[file] = {
 							url: file
@@ -103,30 +102,31 @@ export default function(Writenode){
 
     }
 
-    return new Bluebird((resolve, reject) => {
-        let watcher = chokidar.watch(pathToBlog + '/data/**/data.md'),
-            queue = [];
+	let watcher = Writenode.getService('watcher'),
+        queue = [];
 
-        function handleFileChange(filePath){
-            return readFile(filePath, {
-                    encoding: 'utf-8'
-                })
-                .catch(error => console.error(error))
-                .then(rawMarkdown => parseMarkdown(rawMarkdown, Path.relative(pathToBlog, filePath)));
-        }
+    function handleFileChange(filePath){
+		// console.info('UPDATE ARTICLE: ', filePath);
 
+        return readFile(filePath, {
+                encoding: 'utf-8'
+            })
+            .catch(error => console.error(error))
+            .then(rawMarkdown => parseMarkdown(rawMarkdown, Path.relative(pathToBlog, filePath)))
+			.then(setArticleTemplates)
+			.then(lookupArticleMedias)
+			.then(setArticleAttributes)
+			.then(({ attributes, article }) => {
+		        articles.add(article);
+		        article.set(attributes);
 
-        watcher.on('ready', () => {
-            return Bluebird.each(queue, handleFileChange)
-                .then(() => {
-                    timestamp('Done articles');
+				return article;
+			})
+			.then(article => article.getMedias());
+    }
 
-                    return resolve(articles);
-                });
-        });
-        watcher.on('add', filePath => queue.push(filePath));
-        watcher.on('change', handleFileChange);
-
-        return watcher;
-    });
+	return watcher.addChangeHandler([
+		pathToBlog + '/data/**/data.md'
+	], path => handleFileChange(path))
+		.then(a => articles);
 }
