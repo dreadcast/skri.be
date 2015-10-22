@@ -8,31 +8,31 @@ import FrontMatter from 'front-matter';
 import Lowerdash from 'lowerdash';
 
 export default function(Writenode){
-    let articles = new ArticleCollection,
-        readFile = Bluebird.promisify(fs.readFile),
-        readdir = Bluebird.promisify(fs.readdir),
-        { timestamp, getService } = Writenode,
-        { pathToBlog, defaultTemplates, pathToTheme } = getService('conf');
+	let articles = new ArticleCollection,
+		readFile = Bluebird.promisify(fs.readFile),
+		readdir = Bluebird.promisify(fs.readdir),
+		{ timestamp, getService } = Writenode,
+		{ pathToBlog, defaultTemplates, pathToTheme } = getService('conf');
 
-    articles.setDefaultTemplates(defaultTemplates, pathToTheme);
+	articles.setDefaultTemplates(defaultTemplates, pathToTheme);
 
-    function parseMarkdown(rawMarkdown, filePath){
-        let { attributes, body } = FrontMatter(rawMarkdown);
+	function parseMarkdown(rawMarkdown, filePath){
+		let { attributes, body } = FrontMatter(rawMarkdown);
 
-        if(typeof attributes.tags == 'string'){
-            attributes.tags = attributes.tags.split(/,\s?/);
-        }
+		if(typeof attributes.tags == 'string'){
+			attributes.tags = attributes.tags.split(/,\s?/);
+		}
 
-        attributes.id = filePath.replace('data/', '').replace('/data.md', '');
-        var parsedContent = body.match(/#(.*)\n/);
+		attributes.id = filePath.replace('data/', '').replace('/data.md', '');
+		var parsedContent = body.match(/#(.*)\n/);
 
-        if(parsedContent){
-            attributes.title = parsedContent[1];
-            attributes.content = marked(parsedContent.input.replace(parsedContent[0], ''));
+		if(parsedContent){
+			attributes.title = parsedContent[1];
+			attributes.content = marked(parsedContent.input.replace(parsedContent[0], ''));
 
-        } else {
-            attributes.content = body;
-        }
+		} else {
+			attributes.content = body;
+		}
 
 		if(attributes.medias && Array.isArray(attributes.medias)){
 			var medias = {};
@@ -45,36 +45,36 @@ export default function(Writenode){
 		}
 
 		return Bluebird.resolve(attributes);
-    }
+	}
 
 	function setArticleAttributes(attributes){
 		let article = new ArticleModel({
-            id: attributes.id,
-            url: attributes.id
-        }, {
-            pathToBlog
-        });
+			id: attributes.id,
+			url: attributes.id
+		}, {
+			pathToBlog
+		});
 
-        article.on('change:tags', article => {
-            articles.addTags(article.get('tags'));
-        });
+		article.on('change:tags', article => {
+			articles.addTags(article.get('tags'));
+		});
 
 		return Bluebird.resolve({ attributes, article });
-    }
+	}
 
 	function setArticleTemplates(attributes){
 		let defaultTemplates = articles.getDefaultTemplates('article');
 
-        if(attributes.templates){
-            let articleTemplates = articles.setTemplatesPath(attributes.templates, pathToTheme);
+		if(attributes.templates){
+			let articleTemplates = articles.setTemplatesPath(attributes.templates, pathToTheme);
 
-            Lowerdash.assign(attributes.templates, defaultTemplates, articleTemplates);
-        } else {
-            attributes.templates = defaultTemplates;
-        }
+			Lowerdash.assign(attributes.templates, defaultTemplates, articleTemplates);
+		} else {
+			attributes.templates = defaultTemplates;
+		}
 
 		return Bluebird.resolve(attributes);
-    }
+	}
 
 	function lookupArticleMedias(attributes){
 		return readdir(Path.join(pathToBlog, 'data', attributes.id))
@@ -97,32 +97,32 @@ export default function(Writenode){
 			});
 	}
 
-    function cache(){
+	function cache(){
 
-    }
+	}
 
 	let watcher = Writenode.getService('watcher'),
-        queue = [];
+		queue = [];
 
-    function handleFileChange(filePath){
+	function handleFileChange(filePath){
 		// console.info('UPDATE ARTICLE: ', filePath);
 
-        return readFile(filePath, {
-                encoding: 'utf-8'
-            })
-            .catch(error => console.error(error))
-            .then(rawMarkdown => parseMarkdown(rawMarkdown, Path.relative(pathToBlog, filePath)))
+		return readFile(filePath, {
+				encoding: 'utf-8'
+			})
+			.catch(error => console.error(error))
+			.then(rawMarkdown => parseMarkdown(rawMarkdown, Path.relative(pathToBlog, filePath)))
 			.then(setArticleTemplates)
 			.then(lookupArticleMedias)
 			.then(setArticleAttributes)
 			.then(({ attributes, article }) => {
-		        articles.add(article);
-		        article.set(attributes);
+				articles.add(article);
+				article.set(attributes);
 
 				return article;
 			})
 			.then(article => article.getMedias());
-    }
+	}
 
 	return watcher.addChangeHandler([
 		pathToBlog + '/data/**/data.md'

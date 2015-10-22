@@ -3,18 +3,18 @@ import Path from 'path';
 import Bluebird from 'bluebird';
 
 export default function(Writenode, pathToTheme){
-    pathToTheme = Path.dirname(Path.resolve(pathToTheme));
+	pathToTheme = Path.dirname(Path.resolve(pathToTheme));
 
-    let services = {},
-    	conf = {},
-    	defaultConf = {
-    		theme: Path.join(__dirname, 'default/theme'),
-    		// pathToBlog: Path.join(__dirname, 'default')
-    		pathToBlog: Path.resolve('.')
-    	},
+	let services = {},
+		conf = {},
+		defaultConf = {
+			theme: Path.join(__dirname, 'default/theme'),
+			// pathToBlog: Path.join(__dirname, 'default')
+			pathToBlog: Path.resolve('.')
+		},
 		theme = require(pathToTheme);
 
-    // pathToTheme = Path.dirname(pathToTheme);
+	// pathToTheme = Path.dirname(pathToTheme);
 
 	conf = merge({ pathToTheme }, defaultConf);
 
@@ -22,5 +22,5 @@ export default function(Writenode, pathToTheme){
 		pathToTheme
 	});
 
-    return Bluebird.resolve(conf);
+	return Bluebird.resolve(conf);
 }

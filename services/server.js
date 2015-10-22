@@ -7,53 +7,53 @@ import Lowerdash from 'lowerdash';
 
 export default function(Writenode){
 	let server = express(),
-        articles = Writenode.getService('articles'),
-        views = Writenode.getService('views'),
-        assets = Writenode.getService('assets'),
-        { pathToTheme } = Writenode.getService('conf');
+		articles = Writenode.getService('articles'),
+		views = Writenode.getService('views'),
+		assets = Writenode.getService('assets'),
+		{ pathToTheme } = Writenode.getService('conf');
 
 
-    return new Bluebird((resolve, reject) => {
-        server.get('/asset/*', (request, response, next) => {
+	return new Bluebird((resolve, reject) => {
+		server.get('/asset/*', (request, response, next) => {
 			assets.process(Path.join(pathToTheme, request.params[0]))
 				.then(processed => response.end(processed));
 		});
 
-        server.get('/*', (request, response, next) => {
+		server.get('/*', (request, response, next) => {
 			let ext = Path.extname(request.params),
 				params = {
 					path: request.params[0].replace(ext, ''),
 					type: ext.replace('.', '') || 'html'
 				},
-                responseData = {};
+				responseData = {};
 
 			console.info(params);
 
-            if(articles.tags.indexOf(params.path) > -1){
+			if(articles.tags.indexOf(params.path) > -1){
 				var filteredArticles = articles
 					.toJSON()
 					.filter(article => Lowerdash.contains(article.tags, params.path));
 
 				console.info(articles.defaultTemplates.posts[params.type])
 				responseData.articles = views.renderJsonList(filteredArticles, articles.defaultTemplates.posts[params.type]);
-            }
+			}
 
-            if(articles.pluck('id').indexOf(params.path) > -1){
-                let article = articles.get(params.path);
+			if(articles.pluck('id').indexOf(params.path) > -1){
+				let article = articles.get(params.path);
 
-                return views.render(article.get('templates')[params.type], {
-                    article: article.toJSON()
-                })
-                    .then(html => response.end(html));
+				return views.render(article.get('templates')[params.type], {
+					article: article.toJSON()
+				})
+					.then(html => response.end(html));
 
-                responseData.article = views.renderJson(article.toJSON(), article.get('templates'));
-            }
+				responseData.article = views.renderJson(article.toJSON(), article.get('templates'));
+			}
 
-            response.json(responseData);
-        });
+			response.json(responseData);
+		});
 
-        server.listen(Writenode.getService('conf').port);
+		server.listen(Writenode.getService('conf').port);
 
-        return resolve(server);
-    });
+		return resolve(server);
+	});
 }

@@ -1561,13 +1561,13 @@ var regexp = new RegExp(
 puts "\t\t" + DATA.read.gsub(/\(\?x\)|\s+#.*$|\s+|\\$|\\n/,'')
 __END__
 	"(?x)^(?:\
-	  \\s* ( , ) \\s*               # Separator          \n\
-	| \\s* ( <combinator>+ ) \\s*   # Combinator         \n\
-	|      ( \\s+ )                 # CombinatorChildren \n\
-	|      ( <unicode>+ | \\* )     # Tag                \n\
-	| \\#  ( <unicode>+       )     # ID                 \n\
-	| \\.  ( <unicode>+       )     # ClassName          \n\
-	|                               # Attribute          \n\
+	  \\s* ( , ) \\s*			   # Separator		  \n\
+	| \\s* ( <combinator>+ ) \\s*   # Combinator		 \n\
+	|	  ( \\s+ )				 # CombinatorChildren \n\
+	|	  ( <unicode>+ | \\* )	 # Tag				\n\
+	| \\#  ( <unicode>+	   )	 # ID				 \n\
+	| \\.  ( <unicode>+	   )	 # ClassName		  \n\
+	|							   # Attribute		  \n\
 	\\[  \
 		\\s* (<unicode1>+)  (?:  \
 			\\s* ([*^$!~|]?=)  (?:  \
@@ -1663,10 +1663,10 @@ function parser(
 		var test, regexp;
 
 		switch (attributeOperator){
-			case '^=' : regexp = new RegExp(       '^'+ escapeRegExp(attributeValue)            ); break;
-			case '$=' : regexp = new RegExp(            escapeRegExp(attributeValue) +'$'       ); break;
+			case '^=' : regexp = new RegExp(	   '^'+ escapeRegExp(attributeValue)			); break;
+			case '$=' : regexp = new RegExp(			escapeRegExp(attributeValue) +'$'	   ); break;
 			case '~=' : regexp = new RegExp( '(^|\\s)'+ escapeRegExp(attributeValue) +'(\\s|$)' ); break;
-			case '|=' : regexp = new RegExp(       '^'+ escapeRegExp(attributeValue) +'(-|$)'   ); break;
+			case '|=' : regexp = new RegExp(	   '^'+ escapeRegExp(attributeValue) +'(-|$)'   ); break;
 			case  '=' : test = function(value){
 				return attributeValue == value;
 			}; break;
@@ -2144,13 +2144,13 @@ local.search = function(context, expression, append, first){
 		combinator = 'combinator:' + currentBit.combinator;
 		if (!this[combinator]) continue search;
 
-		tag        = (this.isXMLDocument) ? currentBit.tag : currentBit.tag.toUpperCase();
-		id         = currentBit.id;
+		tag		= (this.isXMLDocument) ? currentBit.tag : currentBit.tag.toUpperCase();
+		id		 = currentBit.id;
 		classList  = currentBit.classList;
-		classes    = currentBit.classes;
+		classes	= currentBit.classes;
 		attributes = currentBit.attributes;
-		pseudos    = currentBit.pseudos;
-		lastBit    = (j === (currentExpression.length - 1));
+		pseudos	= currentBit.pseudos;
+		lastBit	= (j === (currentExpression.length - 1));
 
 		this.bitUniques = {};
 
@@ -4979,7 +4979,7 @@ JSON.secure = true;
 
 JSON.decode = function(string, secure){
 	if (!string || typeOf(string) != 'string') return null;
-    
+	
 	if (secure == null) secure = JSON.secure; 
 	if (secure){
 		if (JSON.parse) return JSON.parse(string);

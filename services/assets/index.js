@@ -13,32 +13,32 @@ export default function(Writenode){
 	let { addService, getService } = Writenode;
 
 	return addService('assets/less', less)
-	    .then(() => addService('assets/es', es))
+		.then(() => addService('assets/es', es))
 		.then(() => {
-		    function process(path){
-		        switch(Path.extname(path)){
-		            case '.es':
-		            case '.es6':
-		            case '.es7':
-		            case '.jsx':
-		                return getService('assets/es').process(path);
-		                break;
+			function process(path){
+				switch(Path.extname(path)){
+					case '.es':
+					case '.es6':
+					case '.es7':
+					case '.jsx':
+						return getService('assets/es').process(path);
+						break;
 
-		            case '.css':
-		            case '.less':
+					case '.css':
+					case '.less':
 						return getService('assets/less').process(path);
-		                break;
+						break;
 
-		            default:
-		                return readFile(path, {
-		                    encoding: 'utf-8'
-		                });
-		                break;
-		        }
-		    }
+					default:
+						return readFile(path, {
+							encoding: 'utf-8'
+						});
+						break;
+				}
+			}
 
 			return {
 				process
 			};
-	    });
+		});
 }

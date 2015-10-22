@@ -7,14 +7,14 @@ body{
 }
 .main-header{
 	position: absolute;
-    top: 20px;
+	top: 20px;
 	width: 232px;
 	height: 95px;
 	z-index: 4;
-    
-    h1{
-	    display: none;
-    }
+	
+	h1{
+		display: none;
+	}
 }
 
 .wrap-bottom{
@@ -171,8 +171,8 @@ body{
 	}
 }
 @media screen and (min-width: 641px){
-    .main-header{
-    	left: @margin;
+	.main-header{
+		left: @margin;
 		
 		.phone-logo{
 			display: none;
@@ -203,8 +203,8 @@ body{
 	}
 }
 @media screen and (max-width: 640px){
-    .main-header{
-    	left: @margin-phone;
+	.main-header{
+		left: @margin-phone;
 		
 		.logo{
 			display: none;
