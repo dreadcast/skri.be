@@ -6,61 +6,56 @@ export default class SuperModel extends Model {
 	schema = {};
 
 	constructor(attributes, options){
-		super(attributes, options);
+		super({}, options);
 
 		this.options = options;
 		this.setSchema();
 
 		Lowerdash.each(this.schema, (properties, field) => {
-			let { change, forceType, initial, require } = properties;
+			let { initial, compute } = properties;
 
-			if(change){
-				this.on('change:' + field, model => {
-					model.set(field, change.call(model, model.get(field)), {
-						silent: true
-					});
 
-					// console.info('\nAUTO CHANGE: "' + model.get('id') + '" ' + field + '\n-> ', model.get(field));
-				});
-
-			} else if(forceType) {
-				this.on('change:' + field, model => {
-					model.cast(field);
-
-					// console.info(
-					// 	'\nCAST: "' + model.get('id') + '" ' +
-					// 	field + ' field to type ' + forceType + '\n-> ',
-					// 	model.get(field)
-					// );
+			if(typeof compute == 'function'){
+				this.set({
+					[field]: compute
 				});
 			}
 
-			if(initial && (this.hasAll(require) || !require)){
-				this.set(field, Lowerdash.isFunction(initial) ? initial.call(this) : initial);
-
-				// console.info('\nSET INITIAL: "' + this.get('id') + '" ' + field + ' field \n-> ', this.get(field));
+			if(initial/* && !this.has(field)*/){
+				this.set({
+					[field]: (typeof initial == 'function') ? initial.call(this) : initial
+				});
 			}
 		});
 
-		this.on('change', model => {
-			Lowerdash.each(model.schema, (properties, field) => {
-				model.compute(field);
-			});
-		});
+		this.set(attributes);
 
 		return this;
 	}
 
-	compute(field){
-		let { compute, require } = this.schema[field];
+	get(field) {
+		var value = super.get(field);
 
-		if(compute && (this.hasAll(require) || !require)){
-			this.set(field, compute.call(this));
+		return typeof value == 'function' ? value.call(this) : value;
+	}
 
-			// console.info('\nCOMPUTE: "' + this.get('id') + '" ' + field + '\n-> ', this.get(field));
-		}
+	set(values, options) {
+		values = Lowerdash.mapValues(values, (value, field) => {
+			if(this.schema[field]){
+				var { forceType, change } = this.schema[field];
 
-		return this;
+				if(forceType){
+					value = SuperModel.cast(value, forceType);
+
+				} else if(change) {
+					value = change.call(this, value);
+				}
+			}
+
+			return value;
+		});
+
+		return super.set(values, options);
 	}
 
 	/**
@@ -70,7 +65,7 @@ export default class SuperModel extends Model {
 	 * @return {Bool}					Instance's key presence
 	 */
 	isComputed(field){
-		return this.has(field) && Lowerdash.isFunction(this.schema[field].compute);
+		return this.has(field) && typeof this.schema[field].compute == 'function';
 	}
 
 	/**
@@ -80,7 +75,7 @@ export default class SuperModel extends Model {
 	 * @return {Boolean}			All fields are present
 	 */
 	hasAll(fields){
-		return Lowerdash.every(fields, field => this.has(field));
+		return fields.every(field => this.has(field));
 	}
 
 	/**
@@ -90,10 +85,7 @@ export default class SuperModel extends Model {
 	 * @param {String} type			Type to cast value to. Type can be 'number', 'boolean', 'date' or 'array'
 	 * @return {Mixed}				Casted value
 	 */
-	cast(field){
-		var value = this.get(field),
-			type = this.schema[field].forceType;
-
+	static cast(value, type){
 		if(type == 'number' && !Lowerdash.isNumber(value)){
 			value = Number(value);
 
@@ -113,9 +105,7 @@ export default class SuperModel extends Model {
 			value = Lowerdash.from(value);
 		}
 
-		return this.set(field, value, {
-			silent: true
-		});
+		return value;
 	}
 
 	/**
@@ -138,5 +128,7 @@ export default class SuperModel extends Model {
 		return rawObj;
 	}
 
-	setSchema(){}
+	setSchema(){
+		return this;
+	}
 }

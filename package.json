@@ -33,10 +33,10 @@
 		"backbone.paginator": "latest",
 
 		"bluebird": "latest",
-		"uglify-js": ">=2.4",
+		"uglify-js": "latest",
 
 		"less": "latest",
-		"less-plugin-autoprefix": "1.1.0",
+		"less-plugin-autoprefix": "latest",
 
 		"swig": "latest",
 		"nunjucks": "latest",
@@ -46,19 +46,19 @@
 		"marked": "latest",
 		"front-matter": "latest",
 
-		"express": "3.1.0",
+		"express": "latest",
 		"babel": "latest",
 
-		"fs-extra": "0.16.4",
+		"fs-extra": "latest",
 		"fs-recurse": "latest",
 
-		"request": "2.48.0",
+		"request": "latest",
 
-		"imageinfo": "1.0.4",
+		"imageinfo": "latest",
 
-		"cheerio": "0.13.1",
+		"cheerio": "latest",
 		"superscore.string": "latest",
-		"rss": "0.3.2",
+		"rss": "latest",
 		"prompt": "0.2.13",
 		"open": "0.0.5",
 		"moment": "2.9.0",
@@ -66,7 +66,8 @@
 		"anymatch": "latest",
 		"chokidar": "latest",
 		"lowerdash": "0.4.0-draft-3",
-		"lodash": "latest"
+		"lodash": "latest",
+		"jimp": "latest"
 	},
 
 	"devDependencies": {

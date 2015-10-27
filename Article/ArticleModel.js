@@ -4,6 +4,9 @@ import SuperModel from './../Base/SuperModel';
 import { merge, omit } from 'lowerdash';
 
 var schema = {
+	'id': {},
+	'source': {},
+	'templates': {},
 	'title': {
 		change: clean
 	},
@@ -15,6 +18,7 @@ var schema = {
 	},
 	'status': {},
 	'path': {},
+	'content': {},
 	'summary': {
 		require: ['content'],
 		compute(){
@@ -37,28 +41,22 @@ var schema = {
 
 			return mediaCollection;
 		}
-	}
+	},
 };
 
 export default class ArticleModel extends SuperModel {
-	getMedias(){
-		return this.get('mediaCollection')
-			.addItems(this.get('medias'))
-			.catch((message, error) => console.error(message, error));
-	}
-
 	toJSON(){
-		var rawObj = this.attributes;//super.toJSON();
+		var rawObj = super.toJSON();
 
 		rawObj.medias = this.get('mediaCollection')
-			// .map(media => media.toJSON());
-			.map(media => media.attributes);
+			.map(media => media.toJSON());
 
+		// console.info(omit(rawObj, 'mediaCollection'));
 		return omit(rawObj, 'mediaCollection');
 	}
 
 	setSchema(){
-		this.schema = merge({}, this.schema, schema);
+		this.schema = schema;
 
 		return this;
 	}

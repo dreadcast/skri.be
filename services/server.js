@@ -10,8 +10,14 @@ export default function(Writenode){
 		articles = Writenode.getService('articles'),
 		views = Writenode.getService('views'),
 		assets = Writenode.getService('assets'),
-		{ pathToTheme } = Writenode.getService('conf');
+		{ pathToTheme, pathToBlog } = Writenode.getService('conf');
 
+	function serveArticles(){}
+	function serveArticle(){}
+	function serveAsset(){}
+	function serveMedia(params){
+
+	}
 
 	return new Bluebird((resolve, reject) => {
 		server.get('/asset/*', (request, response, next) => {
@@ -20,14 +26,19 @@ export default function(Writenode){
 		});
 
 		server.get('/*', (request, response, next) => {
-			let ext = Path.extname(request.params),
+			let path = request.params[0],
+				absBlogPath = Path.join(pathToBlog, 'data', path);
+
+			if(fs.existsSync(absBlogPath) && !fs.statSync(absBlogPath).isDirectory()){
+				return response.sendFile(absBlogPath);
+			}
+
+			let ext = Path.extname(path),
 				params = {
-					path: request.params[0].replace(ext, ''),
+					path: path.replace(ext, ''),
 					type: ext.replace('.', '') || 'html'
 				},
-				responseData = {};
-
-			console.info(params);
+				responseData = {}
 
 			if(articles.tags.indexOf(params.path) > -1){
 				var filteredArticles = articles

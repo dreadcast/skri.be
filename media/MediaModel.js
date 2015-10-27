@@ -25,31 +25,31 @@ let ratios = {
 };
 
 let schema = {
-	'title': {},
+	'caption': {
+		initial: ' '
+	},
 	'provider': {},
 	'url': {},
 	'id': {},
+	'filename': {},
 	'type': {},
 	'width': {
-		type: 'number'
+		forceType: 'number'
 	},
 	'height': {
-		type: 'number'
+		forceType: 'number'
 	},
 	'ratio.actual': {
-		require: ['width', 'height'],
 		compute: function(){
 			return this.get('width') / this.get('height');
 		}
 	},
 	'ratio.round': {
-		require: ['width', 'height'],
 		compute: function(){
 			return Lowerdash.closest(Lowerdash.values(ratios).sort(), this.get('ratio.actual'));
 		}
 	},
 	'ratio.name': {
-		require: ['width', 'height'],
 		compute: function(){
 			return Lowerdash.keyOf(ratios, this.get('ratio.round'));
 		}
@@ -63,7 +63,7 @@ Lowerdash.each(ratios, function(ratio, name){
 
 export default class MediaModel extends SuperModel {
 	setSchema(){
-		this.schema = Lowerdash.merge({}, this.schema, schema);
+		this.schema = schema;
 
 		return this;
 	}

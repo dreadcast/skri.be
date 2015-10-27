@@ -13,12 +13,12 @@ export default function(Writenode){
 
 	function precompile(pathToTemplate){
 		if(precompiledTemplates[pathToTemplate]){
-			// console.info('Skip precompile template: ', pathToTemplate);
+			console.info('Skip precompile template: ', pathToTemplate);
 
 			return Bluebird.resolve(precompiledTemplates[pathToTemplate]);
 
 		} else {
-			// console.info('Precompile template: ', pathToTemplate);
+			console.info('Precompile template: ', pathToTemplate);
 
 			let render;
 
@@ -73,7 +73,7 @@ export default function(Writenode){
 	}
 
 	function flush(){
-		// console.info('Flush precompiled templates');
+		console.info('Flush precompiled templates');
 
 		precompiledTemplates = {}
 	}

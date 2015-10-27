@@ -21,28 +21,7 @@ export default class MediaCollection extends Collection {
 	}
 
 	addItems(rawMedias){
-		var medias = Lowerdash.map(rawMedias, (rawMedia, id) => {
-			if(Lowerdash.isArray(rawMedias)){
-				rawMedia.id = rawMedia.url;
-
-			} else {
-				rawMedia.id = id;
-			}
-
-			if(!/^http/.test(rawMedia.url)){
-				rawMedia.url = Path.join('/', this.ArticlePath, rawMedia.url);
-			}
-
-			this.add(rawMedia);
-
-			var media = this.get(rawMedia.id);
-			media.pathToBlog = this.pathToBlog;
-
-			media.getOEmbedInfo();
-
-			return media.request();
-		});
-
+		var medias = Lowerdash.map(rawMedias, rawMedia => this.add(rawMedia));
 
 		return Bluebird.all(medias);
 	}

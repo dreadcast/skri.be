@@ -3,7 +3,6 @@
 
 body{
 	background: #6f6f6f;
-	overflow: hidden;
 }
 .main-header{
 	position: absolute;
@@ -11,7 +10,7 @@ body{
 	width: 232px;
 	height: 95px;
 	z-index: 4;
-	
+
 	h1{
 		display: none;
 	}
@@ -21,14 +20,11 @@ body{
 	z-index: 0;
 	background-size: cover;
 	background-position: center;
-		
+
 	&.loading{
 		opacity: 0;
 	}
 	opacity: 1;
-}
-.wrap-top{
-	overflow: hidden;
 }
 .wrap-bottom,
 .wrap-top{
@@ -50,7 +46,7 @@ body{
 	top: 162px;
 	z-index: 2;
 	bottom: 0;
-	
+
 	.swiper-wrapper{
 		min-height: 100%;
 	}
@@ -74,7 +70,7 @@ body{
 }
 .article-slide{
 	transition: opacity .2s ease-out;
-	
+
 	&.updating{
 		opacity: 0;
 	}
@@ -82,7 +78,7 @@ body{
 
 .posts-scroller,
 .tags-scroller,
-.article-scroller{	
+.article-scroller{
 	border-top: 1px solid rgba(255, 255, 255, .4);
 	height: 100%;
 }
@@ -91,11 +87,10 @@ body{
 	a{
 		display: block;
 		width: 100%;
-		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		opacity: .7;
-		
+
 		&.selected{
 			opacity: 1;
 		}
@@ -108,13 +103,13 @@ body{
 			display: none;
 		}
 	}
-	
+
 	&.tags{
 		.article-scroller-holder{
 			display: none;
-		}		
+		}
 	}
-	
+
 	&.article{
 		#back-to-posts{
 			display: none !important;
@@ -173,18 +168,18 @@ body{
 @media screen and (min-width: 641px){
 	.main-header{
 		left: @margin;
-		
+
 		.phone-logo{
 			display: none;
 		}
 	}
 	.tags-scroller-holder{
 		left: 70px;
-		
+
 		&,
 		nav,
 		ul{
-			width: 160px;		
+			width: 160px;
 		}
 	}
 	#back-to-tags{
@@ -205,7 +200,7 @@ body{
 @media screen and (max-width: 640px){
 	.main-header{
 		left: @margin-phone;
-		
+
 		.logo{
 			display: none;
 		}
@@ -217,25 +212,25 @@ body{
 		right: @margin-phone !important;
 		top: 92px;
 	}
-	
+
 	.article{
 		.posts-scroller-holder,
 		.tags-scroller-holder{
 			display: none;
 		}
 	}
-	
+
 	.posts{
 		.article-scroller-holder,
 		.tags-scroller-holder{
 			display: none;
 		}
 	}
-	
+
 	.tags{
 		.article-scroller-holder,
 		.posts-scroller-holder{
 			display: none;
-		}		
+		}
 	}
 }

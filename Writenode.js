@@ -4,6 +4,7 @@ import Bluebird from 'bluebird';
 
 import watcher from './services/watcher';
 import conf from './services/conf';
+import medias from './services/medias';
 import articles from './services/articles';
 import views from './services/views';
 import server from './services/server';
@@ -46,6 +47,7 @@ export function dev(pathToTheme){
 	return addService('conf', conf, pathToTheme)
 		.then(() => addService('watcher', watcher))
 		.then(() => addService('articles', articles))
+		.then(() => addService('medias', medias))
 		.then(() => addService('assets', assets))
 		.then(() => addService('views', views))
 		.then(() => addService('server', server))

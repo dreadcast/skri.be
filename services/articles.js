@@ -34,14 +34,12 @@ export default function(Writenode){
 			attributes.content = body;
 		}
 
-		if(attributes.medias && Array.isArray(attributes.medias)){
-			var medias = {};
-
+		if(attributes.medias){
 			attributes.medias.forEach(media => {
-				medias[media.url] = media;
+				if(!media.id){
+					media.id = media.url;
+				}
 			});
-
-			attributes.medias = medias;
 		}
 
 		return Bluebird.resolve(attributes);
@@ -76,33 +74,11 @@ export default function(Writenode){
 		return Bluebird.resolve(attributes);
 	}
 
-	function lookupArticleMedias(attributes){
-		return readdir(Path.join(pathToBlog, 'data', attributes.id))
-			.then(files => {
-				if(!attributes.medias){
-					attributes.medias = {};
-				}
-
-				Lowerdash.chain(files)
-					.filter(file => !Lowerdash.contains(['data.md'], file))
-					.filter(file => !Lowerdash.some(attributes.medias, media => media.url == file))
-					.each(file => {
-						attributes.medias[file] = {
-							url: file
-						}
-					})
-					.value();
-
-				return attributes;
-			});
-	}
-
 	function cache(){
 
 	}
 
-	let watcher = Writenode.getService('watcher'),
-		queue = [];
+	let watcher = Writenode.getService('watcher');
 
 	function handleFileChange(filePath){
 		// console.info('UPDATE ARTICLE: ', filePath);
@@ -113,15 +89,14 @@ export default function(Writenode){
 			.catch(error => console.error(error))
 			.then(rawMarkdown => parseMarkdown(rawMarkdown, Path.relative(pathToBlog, filePath)))
 			.then(setArticleTemplates)
-			.then(lookupArticleMedias)
 			.then(setArticleAttributes)
 			.then(({ attributes, article }) => {
 				articles.add(article);
 				article.set(attributes);
 
+				// console.info(attributes);
 				return article;
-			})
-			.then(article => article.getMedias());
+			});
 	}
 
 	return watcher.addChangeHandler([

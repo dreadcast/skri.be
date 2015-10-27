@@ -22,7 +22,7 @@ export default function(Writenode){
 
 		let watcher = chokidar.watch([
 			pathToTheme,
-			pathToBlog + '/data/**/data.md',
+			pathToBlog + '/data/**/*',
 		], {
 			ignored: '.git/**'
 		})

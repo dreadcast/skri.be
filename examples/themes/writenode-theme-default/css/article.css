@@ -8,7 +8,7 @@
 	img{
 		width: 100%;
 	}
-	
+
 	h1,
 	h2,
 	p{
@@ -17,16 +17,16 @@
 			color: #ceff00;
 		}
 	}
-	
+
 	header{
 		margin-bottom: 20px;
-		
+
 		.resp-link{
 			margin-bottom: 10px;
 			display: inline-block;
 		}
 	}
-	
+
 	h2,
 	p{
 		margin-bottom: 10px;
@@ -41,7 +41,7 @@
 		background: #fff;
 		display: block;
 		transition: opacity .3s linear;
-		
+
 		&:hover{
 			opacity: .7;
 		}
@@ -50,11 +50,11 @@
 
 .post-tags{
 	opacity: .5;
-	
+
 	li{
 		margin: 0 5px 5px 0;
 		font-size: 14px;
-		
+
 		a:before{
 			content: '#';
 		}
@@ -64,7 +64,7 @@
 @media screen and (min-width: 641px){
 	.media-list{
 		margin-right: -@margin;
-		
+
 		li{
 			margin: @margin @margin 0 0;
 		}
@@ -74,9 +74,16 @@
 @media screen and (max-width: 640px){
 	.media-list{
 		margin-right: -@margin-phone;
-		
+
 		li{
 			margin: @margin-phone @margin-phone 0 0;
 		}
+	}
+}
+
+.article-content {
+	li{
+		list-style: inside disc;
+		padding-left: 2rem;
 	}
 }

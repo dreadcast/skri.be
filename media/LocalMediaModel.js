@@ -5,58 +5,29 @@ import fs from 'fs';
 import MediaModel from './MediaModel';
 import Bluebird from 'bluebird';
 
+var readFile = Bluebird.promisify(fs.readFile);
+
 var schema = {
 	'filename': {
-		require: ['url'],
+		// require: ['url'],
 		compute: function(){
 			return Path.basename(this.get('url'));
 		}
 	},
 	'html': {
-		require: ['url', 'title'],
+		// require: ['url', 'caption'],
 		compute: function(){
-			return '<img src="' + this.get('url') + this.get('title') + '">';
+			return '<img src="' + this.get('url') + '" alt="' + this.get('caption') + '">';
 		}
 	}
 };
 
 export default class LocalMediaModel extends MediaModel {
-	getOEmbedInfo(){
-		return this
-			.set('provider', 'local')
-			.set('type', 'image');
-	}
-
 	setSchema(){
+		super.setSchema();
+
 		this.schema = Lowerdash.merge({}, this.schema, schema);
 
 		return this;
-	}
-
-	request(){
-		var path = Path.join(this.pathToBlog, 'data', this.get('url'));
-
-		return new Bluebird((resolve, reject) => {
-			return fs.readFile(path, (error, data) => {
-				if(error){
-					return reject('Error reading file ' + path, error);
-
-				} else {
-					try{
-						var { width, height } = imageinfo(data);
-
-						this.set({
-							width,
-							height
-						});
-
-						return resolve(this);
-
-					} catch(e){
-						return reject('Image info error', e);
-					}
-				}
-			});
-		});
 	}
 }
