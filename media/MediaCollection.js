@@ -1,9 +1,6 @@
 import { Collection } from 'backbone';
 import LocalMediaModel from './LocalMediaModel';
 import RemoteMedia from './Model.Remote';
-import Path from 'path';
-import Lowerdash from 'lowerdash';
-import Bluebird from 'bluebird';
 
 export default class MediaCollection extends Collection {
 	model(attributes){
@@ -18,11 +15,5 @@ export default class MediaCollection extends Collection {
 		}
 
 		return media;
-	}
-
-	addItems(rawMedias){
-		var medias = Lowerdash.map(rawMedias, rawMedia => this.add(rawMedia));
-
-		return Bluebird.all(medias);
 	}
 }
