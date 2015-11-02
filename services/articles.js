@@ -1,5 +1,5 @@
-import ArticleCollection from './../Article/ArticleCollection';
-import ArticleModel from './../Article/ArticleModel';
+import ArticleCollection from './../article/ArticleCollection';
+import ArticleModel from './../article/ArticleModel';
 import Path from 'path';
 import fs from 'fs-extra';
 import marked from 'marked';

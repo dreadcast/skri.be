@@ -1,6 +1,6 @@
 import { clean, stripTags, truncate } from 'superscore.string';
 import MediaCollection from './../Media/MediaCollection';
-import SuperModel from './../Base/SuperModel';
+import SuperModel from './../base/SuperModel';
 import { omit } from 'lowerdash';
 
 var schema = {

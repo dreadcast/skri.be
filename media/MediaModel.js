@@ -1,4 +1,4 @@
-import SuperModel from './../Base/SuperModel';
+import SuperModel from './../base/SuperModel';
 import Lowerdash from 'lowerdash';
 
 let ratios = {
