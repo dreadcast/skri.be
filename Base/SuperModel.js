@@ -99,7 +99,7 @@ export default class SuperModel extends Model {
 			value = moment(value);
 
 		} else if(type == 'array' && Lowerdash.isString(value)){
-			value = value.split(',');
+			value = value.split(/,\s?/);
 
 		} else if(type == 'array' && !Lowerdash.isArray(value)){
 			value = Lowerdash.from(value);
