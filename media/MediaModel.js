@@ -40,17 +40,17 @@ let schema = {
 		forceType: 'number'
 	},
 	'ratio.actual': {
-		compute: function(){
+		compute(){
 			return this.get('width') / this.get('height');
 		}
 	},
 	'ratio.round': {
-		compute: function(){
+		compute(){
 			return Lowerdash.closest(Lowerdash.values(ratios).sort(), this.get('ratio.actual'));
 		}
 	},
 	'ratio.name': {
-		compute: function(){
+		compute(){
 			return Lowerdash.keyOf(ratios, this.get('ratio.round'));
 		}
 	}

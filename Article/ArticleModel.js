@@ -1,12 +1,14 @@
 import { clean, stripTags, truncate } from 'superscore.string';
 import MediaCollection from './../Media/MediaCollection';
 import SuperModel from './../Base/SuperModel';
-import { merge, omit } from 'lowerdash';
+import { omit } from 'lowerdash';
 
 var schema = {
 	'id': {},
 	'source': {},
-	'templates': {},
+	'geo.lat': {},
+	'geo.lng': {},
+	// 'templates': {},
 	'title': {
 		change: clean
 	},
@@ -20,7 +22,6 @@ var schema = {
 	'path': {},
 	'content': {},
 	'summary': {
-		require: ['content'],
 		compute(){
 			var str = this.get('content');
 
@@ -35,11 +36,7 @@ var schema = {
 	'medias': {},
 	'mediaCollection': {
 		initial(){
-			var mediaCollection = new MediaCollection();
-			mediaCollection.ArticlePath = this.get('id');
-			mediaCollection.pathToBlog = this.options.pathToBlog;
-
-			return mediaCollection;
+			return new MediaCollection();
 		}
 	},
 };
@@ -51,7 +48,6 @@ export default class ArticleModel extends SuperModel {
 		rawObj.medias = this.get('mediaCollection')
 			.map(media => media.toJSON());
 
-		// console.info(omit(rawObj, 'mediaCollection'));
 		return omit(rawObj, 'mediaCollection');
 	}
 

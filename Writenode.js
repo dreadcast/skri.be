@@ -31,7 +31,7 @@ export function addService(name, service, ...args){
 		timestamp
 	});
 
-	return service.apply(this, args)
+	return service(...args)
 		.then(serviceData => {
 			services[name] = serviceData;
 

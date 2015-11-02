@@ -12,59 +12,77 @@ export default function(Writenode){
 		assets = Writenode.getService('assets'),
 		{ pathToTheme, pathToBlog } = Writenode.getService('conf');
 
-	function serveArticles(){}
-	function serveArticle(){}
-	function serveAsset(){}
-	function serveMedia(params){
+	function parseRequest(request){
+		let path = request.params[0],
+			ext = Path.extname(path),
+			params = {
+				path: path.replace(ext, ''),
+				type: ext.replace('.', '') || 'html'
+			};
 
+		return { path, params }
 	}
 
-	return new Bluebird((resolve, reject) => {
-		server.get('/asset/*', (request, response, next) => {
-			assets.process(Path.join(pathToTheme, request.params[0]))
-				.then(processed => response.end(processed));
-		});
+	function serveArticles(request, response, next){
+		let { path, params } = parseRequest(request),
+			responseData = {};
 
-		server.get('/*', (request, response, next) => {
-			let path = request.params[0],
-				absBlogPath = Path.join(pathToBlog, 'data', path);
+		if(articles.tags.indexOf(params.path) > -1){
+			var filteredArticles = articles
+				.toJSON()
+				.filter(article => Lowerdash.contains(article.tags, params.path));
 
-			if(fs.existsSync(absBlogPath) && !fs.statSync(absBlogPath).isDirectory()){
-				return response.sendFile(absBlogPath);
-			}
-
-			let ext = Path.extname(path),
-				params = {
-					path: path.replace(ext, ''),
-					type: ext.replace('.', '') || 'html'
-				},
-				responseData = {}
-
-			if(articles.tags.indexOf(params.path) > -1){
-				var filteredArticles = articles
-					.toJSON()
-					.filter(article => Lowerdash.contains(article.tags, params.path));
-
-				console.info(articles.defaultTemplates.posts[params.type])
-				responseData.articles = views.renderJsonList(filteredArticles, articles.defaultTemplates.posts[params.type]);
-			}
-
-			if(articles.pluck('id').indexOf(params.path) > -1){
-				let article = articles.get(params.path);
-
-				return views.render(article.get('templates')[params.type], {
-					article: article.toJSON()
-				})
-					.then(html => response.end(html));
-
-				responseData.article = views.renderJson(article.toJSON(), article.get('templates'));
-			}
+			responseData.articles = views.renderJsonList(filteredArticles, articles.defaultTemplates.posts[params.type]);
 
 			response.json(responseData);
-		});
 
-		server.listen(Writenode.getService('conf').port);
+		} else {
+			return next();
+		}
 
-		return resolve(server);
-	});
+	}
+	function serveArticle(request, response, next){
+		let { path, params } = parseRequest(request),
+			article = articles.find({
+				id: params.path
+			});
+
+		if(article){
+			return views.render(article.get('templates')[params.type], {
+				article: article.toJSON()
+			})
+				.then(html => response.end(html));
+
+			responseData.article = views.renderJson(article.toJSON(), article.get('templates'));
+
+		} else {
+			return next();
+		}
+	}
+
+	function serveAsset(request, response, next){
+		assets.process(Path.join(pathToTheme, request.params[0]))
+			.then(processed => response.end(processed));
+	}
+
+	function serveMedia(request, response, next){
+		let path = request.params[0],
+			absBlogPath = Path.join(pathToBlog, 'data', path);
+
+		if(fs.existsSync(absBlogPath) && !fs.statSync(absBlogPath).isDirectory()){
+			return response.sendFile(absBlogPath);
+
+		} else {
+			return next();
+		}
+	}
+
+	server.get('/asset/*', serveAsset);
+	server.get('/*', serveMedia);
+	server.get('/*', serveArticles);
+	server.get('/*', serveArticle);
+
+	server.listen(Writenode.getService('conf').port);
+
+	return Bluebird.resolve(server);
 }

@@ -12,6 +12,7 @@ export default function(Writenode){
 		readFile = Bluebird.promisify(fs.readFile),
 		readdir = Bluebird.promisify(fs.readdir),
 		{ timestamp, getService } = Writenode,
+		watcher = getService('watcher'),
 		{ pathToBlog, defaultTemplates, pathToTheme } = getService('conf');
 
 	articles.setDefaultTemplates(defaultTemplates, pathToTheme);
@@ -42,22 +43,19 @@ export default function(Writenode){
 			});
 		}
 
-		return Bluebird.resolve(attributes);
+		return attributes;
 	}
 
-	function setArticleAttributes(attributes){
-		let article = new ArticleModel({
-			id: attributes.id,
-			url: attributes.id
-		}, {
-			pathToBlog
-		});
+	function createArticle(attributes){
+		let article = new ArticleModel;
 
 		article.on('change:tags', article => {
 			articles.addTags(article.get('tags'));
 		});
 
-		return Bluebird.resolve({ attributes, article });
+		article.set(attributes);
+
+		return article;
 	}
 
 	function setArticleTemplates(attributes){
@@ -70,37 +68,34 @@ export default function(Writenode){
 		} else {
 			attributes.templates = defaultTemplates;
 		}
-
-		return Bluebird.resolve(attributes);
 	}
 
 	function cache(){
 
 	}
 
-	let watcher = Writenode.getService('watcher');
-
 	function handleFileChange(filePath){
 		// console.info('UPDATE ARTICLE: ', filePath);
 
-		return readFile(filePath, {
-				encoding: 'utf-8'
-			})
-			.catch(error => console.error(error))
-			.then(rawMarkdown => parseMarkdown(rawMarkdown, Path.relative(pathToBlog, filePath)))
-			.then(setArticleTemplates)
-			.then(setArticleAttributes)
-			.then(({ attributes, article }) => {
-				articles.add(article);
-				article.set(attributes);
+		if(/\/data\.md$/.test(filePath)){
+			return readFile(filePath, {
+					encoding: 'utf-8'
+				})
+				.catch(error => console.error(error))
+				.then(rawMarkdown => {
+					let attributes = parseMarkdown(rawMarkdown, Path.relative(pathToBlog, filePath));
+					setArticleTemplates(attributes);
+					articles.add(createArticle(attributes));
+				});
 
-				// console.info(attributes);
-				return article;
-			});
+		// } else {
+		// 	console.info(filePath)
+		}
 	}
 
 	return watcher.addChangeHandler([
-		pathToBlog + '/data/**/data.md'
+		// pathToBlog + '/data/**/data.md'
+		pathToBlog + '/data/**/*'
 	], path => handleFileChange(path))
 		.then(a => articles);
 }

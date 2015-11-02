@@ -3,7 +3,7 @@ import Path from 'path';
 import PageableCollection from 'backbone.paginator';
 import ArticleModel from './ArticleModel';
 
-var listArticles = function(articles, properties){
+function listArticles(articles, properties){
 	return Lowerdash.merge({
 		articles: articles,
 		total: articles.length
@@ -36,21 +36,23 @@ export default class ArticleCollection extends PageableCollection {
 		return Lowerdash.clone(this.defaultTemplates[part]);
 	}
 
-	setTemplatesPath(templates, absoluteBasePath){
+	setTemplatesPath(templates, pathToTheme){
 		return Lowerdash.mapValues(templates, template => {
 			if(typeof template == 'string'){
-				return Path.join(absoluteBasePath, template);
+				// Path to template file for HTML views
+				return Path.join(pathToTheme, template);
 
 			} else {
+				// Or array of fields for JSON views
 				return template;
 			}
 		})
 	}
 
-	setDefaultTemplates(templates, absoluteBasePath){
+	setDefaultTemplates(templates, pathToTheme){
 		this.defaultTemplates = Lowerdash(this.defaultTemplates)
 			.merge(templates)
-			.mapValues(type => this.setTemplatesPath(type, absoluteBasePath))
+			.mapValues(type => this.setTemplatesPath(type, pathToTheme))
 			.value();
 	}
 

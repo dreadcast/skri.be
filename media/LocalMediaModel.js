@@ -9,14 +9,12 @@ var readFile = Bluebird.promisify(fs.readFile);
 
 var schema = {
 	'filename': {
-		// require: ['url'],
-		compute: function(){
+		compute(){
 			return Path.basename(this.get('url'));
 		}
 	},
 	'html': {
-		// require: ['url', 'caption'],
-		compute: function(){
+		compute(){
 			return '<img src="' + this.get('url') + '" alt="' + this.get('caption') + '">';
 		}
 	}

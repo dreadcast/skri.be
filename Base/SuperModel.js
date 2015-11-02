@@ -21,7 +21,7 @@ export default class SuperModel extends Model {
 				});
 			}
 
-			if(initial/* && !this.has(field)*/){
+			if(initial){
 				this.set({
 					[field]: (typeof initial == 'function') ? initial.call(this) : initial
 				});
