@@ -8,6 +8,7 @@ medias:
       id: kinky-archi
     - url: copenhagen-495902_1280.jpg
       caption: Pier
+    - https://www.youtube.com/watch?v=ejMa4qKmSVo
 ---
 
 # Copenhagen
