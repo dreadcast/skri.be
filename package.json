@@ -50,7 +50,7 @@
 		"fs-extra": "0.26.2",
 		"fs-recurse": "0.0.6",
 
-		"request": "2.65.0",
+		"request-promise": "1.0.2",
 
 		"imageinfo": "1.0.4",
 
@@ -68,9 +68,12 @@
 		"jimp": "0.2.13",
 
 		"babel": "5.8.29",
+
 		"babel-core": "latest",
 		"babel-preset-stage-0": "latest",
-		"babel-preset-es2015": "latest"
+		"babel-preset-es2015": "latest",
+		"babel-plugin-transform-class-properties": "latest",
+		"babel-plugin-transform-object-rest-spread": "latest"
 	},
 
 	"devDependencies": {
@@ -81,6 +84,7 @@
 		"stage": 0
 	},
 	"babel6": {
+		"plugins": ["transform-class-properties", "transform-object-rest-spread"],
 		"presets": ["stage-0", "es2015"]
 	},
 

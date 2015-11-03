@@ -1,6 +1,6 @@
 import { Collection } from 'backbone';
 import LocalMediaModel from './LocalMediaModel';
-import RemoteMedia from './Model.Remote';
+import RemoteMedia from './RemoteMediaModel';
 
 export default class MediaCollection extends Collection {
 	model(attributes){
