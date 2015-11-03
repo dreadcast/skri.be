@@ -1,6 +1,6 @@
 import Lowerdash from 'lowerdash';
 import Path from 'path';
-import PageableCollection from 'backbone.paginator';
+import { Collection } from 'backbone';
 import ArticleModel from './ArticleModel';
 
 function listArticles(articles, properties){
@@ -10,7 +10,7 @@ function listArticles(articles, properties){
 	}, properties);
 };
 
-export default class ArticleCollection extends PageableCollection {
+export default class ArticleCollection extends Collection {
 	model = ArticleModel;
 	defaultTemplates = {};
 	tags = [];
