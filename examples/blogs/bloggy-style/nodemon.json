@@ -1,5 +1,6 @@
 {
-  "verbose": true,
-  "watch": ["../../../"],
-  "ignore": ["*/node_modules/*", "*/bower_components/*"]
+	"verbose": true,
+	"watch": ["../../../"],
+	"ext": "js",
+	"ignore": ["data/"]
 }

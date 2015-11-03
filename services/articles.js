@@ -36,9 +36,17 @@ export default function(Writenode){
 		}
 
 		if(attributes.medias){
-			attributes.medias.forEach(media => {
+			attributes.medias.forEach((media, index) => {
 				if(!media.id){
-					media.id = media.url;
+					if(media.url){
+						media.id = media.url;
+
+					} else {
+						attributes.medias[index] = {
+							id: media,
+							url: media
+						}
+					}
 				}
 			});
 		}
@@ -85,7 +93,10 @@ export default function(Writenode){
 				.then(rawMarkdown => {
 					let attributes = parseMarkdown(rawMarkdown, Path.relative(pathToBlog, filePath));
 					setArticleTemplates(attributes);
-					articles.add(createArticle(attributes));
+
+					articles.add(createArticle(attributes), {
+						merge: true
+					});
 				});
 
 		// } else {
