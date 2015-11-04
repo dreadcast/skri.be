@@ -2,6 +2,7 @@ import { clean, stripTags, truncate } from 'superscore.string';
 import MediaCollection from './../Media/MediaCollection';
 import SuperModel from './../base/SuperModel';
 import { omit } from 'lowerdash';
+import Yaml from 'json2yaml';
 
 var schema = {
 	'id': {},
@@ -58,15 +59,14 @@ export default class ArticleModel extends SuperModel {
 	}
 
 	toMarkDown(){
-		var rawArticle = super.toJSON(),
-			attributes = omit(this.get('rawAttributes'), medias),
-			markdown = this.get('markdown'),
-			medias = this.get('mediaCollection').map(media => media.toYAML());
+		var rawAttributes = this.get('rawAttributes');
 
-		return '---'
-			+ $attributes
-			+ $medias
-			+ '---'
-			+ $markdown;
+		rawAttributes.created = rawAttributes.created.toJSON();
+		rawAttributes.medias = this.get('mediaCollection').toYAML();
+
+		var attributes = Yaml.stringify(rawAttributes),
+			markdown = this.get('markdown');
+
+		return attributes + markdown;
 	}
 }

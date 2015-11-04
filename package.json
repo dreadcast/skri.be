@@ -29,7 +29,7 @@
 
 	"dependencies": {
 		"backbone": "1.2.3",
-		"yamljs": "0.2.4",
+		"json2yaml": "1.0.3",
 
 		"bluebird": "3.0.5",
 		"uglify-js": "2.5.0",

@@ -69,6 +69,18 @@ export default class MediaModel extends SuperModel {
 	}
 
 	toYAML(){
-		
+		var url = this.get('url'),
+			id,
+			caption = this.get('caption');
+
+		if(this.get('id') != this.get('url')){
+			id = this.get('id');
+		}
+
+		return {
+			url,
+			id,
+			caption
+		};
 	}
 }

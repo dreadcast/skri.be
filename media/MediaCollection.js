@@ -16,4 +16,8 @@ export default class MediaCollection extends Collection {
 
 		return media;
 	}
+
+	toYAML(){
+		return this.map(media => media.toYAML());
+	}
 }
