@@ -67,4 +67,8 @@ export default class MediaModel extends SuperModel {
 
 		return this;
 	}
+
+	toYAML(){
+		
+	}
 }

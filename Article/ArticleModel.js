@@ -56,4 +56,17 @@ export default class ArticleModel extends SuperModel {
 
 		return this;
 	}
+
+	toMarkDown(){
+		var rawArticle = super.toJSON(),
+			attributes = omit(this.get('rawAttributes'), medias),
+			markdown = this.get('markdown'),
+			medias = this.get('mediaCollection').map(media => media.toYAML());
+
+		return '---'
+			+ $attributes
+			+ $medias
+			+ '---'
+			+ $markdown;
+	}
 }
