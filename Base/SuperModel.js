@@ -28,7 +28,15 @@ export default class SuperModel extends Model {
 			}
 		});
 
-		this.set(attributes);
+		var cleanAttributes = {};
+		
+		Lowerdash.each(attributes, (value, key) => {
+			if(!Lowerdash.contains([null, undefined], value)){
+				cleanAttributes[key] = value;
+			}
+		})
+
+		this.set(cleanAttributes);
 
 		return this;
 	}
