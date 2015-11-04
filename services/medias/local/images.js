@@ -5,8 +5,7 @@ import lodash from 'lodash';
 import Path from 'path';
 
 export default function(Writenode){
-	let watcher = Writenode.getService('watcher'),
-		readFile = Bluebird.promisify(fs.readFile),
+	let readFile = Bluebird.promisify(fs.readFile),
 		readdir = Bluebird.promisify(fs.readdir),
 		{ timestamp, getService } = Writenode,
 		{ pathToBlog, defaultTemplates, pathToTheme } = getService('conf');
@@ -21,9 +20,8 @@ export default function(Writenode){
 
 	}
 
-	function handleFileChange(path){
-		var articlePath = Path.basename(Path.dirname(path)),
-			article = getService('articles').get(articlePath);
+	function createMedia(article, path){
+		var articlePath = Path.basename(Path.dirname(path));
 
 		return getInfo(path)
 			.then(info => {
@@ -45,17 +43,13 @@ export default function(Writenode){
 					id: media.id,
 				};
 
-				article
-					.get('mediaCollection').add(rawMedia, {
-						merge: true
-					});
+				return rawMedia;
 			});
 	}
 
-	return watcher.addChangeHandler([
-		pathToBlog + '/data/**/*.jpg',
-		pathToBlog + '/data/**/*.jpeg',
-		pathToBlog + '/data/**/*.gif',
-		pathToBlog + '/data/**/*.png',
-	], path => handleFileChange(path));
+	return Bluebird.resolve({
+		createMedia,
+		getInfo,
+		resize
+	});
 }

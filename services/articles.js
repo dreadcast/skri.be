@@ -13,12 +13,17 @@ export default function(Writenode){
 		readdir = Bluebird.promisify(fs.readdir),
 		{ timestamp, getService } = Writenode,
 		watcher = getService('watcher'),
-		{ pathToBlog, defaultTemplates, pathToTheme } = getService('conf');
+		{ pathToBlog, defaultTemplates, pathToTheme } = getService('conf'),
+		mediasQueue = {},
+		{ createMedia } = getService('medias');
 
 	articles.setDefaultTemplates(defaultTemplates, pathToTheme);
 
 	function parseMarkdown(rawMarkdown, filePath){
 		let { attributes, body } = FrontMatter(rawMarkdown);
+
+		attributes.rawAttributes = Lowerdash.clone(attributes);
+		attributes.markdown = body;
 
 		if(typeof attributes.tags == 'string'){
 			attributes.tags = attributes.tags.split(/,\s?/);
@@ -49,6 +54,9 @@ export default function(Writenode){
 					}
 				}
 			});
+
+		} else {
+			attributes.medias = [];
 		}
 
 		return attributes;
@@ -82,8 +90,27 @@ export default function(Writenode){
 
 	}
 
+	function addMedia(article, rawMedia){
+		console.info(`ADD MEDIA: "${rawMedia.url}"
+	TO ARTICLE: "${article.get('id')}"`);
+
+		return article.get('mediaCollection').add(rawMedia, {
+			merge: true
+		});
+	}
+
 	function handleFileChange(filePath){
-		// console.info('UPDATE ARTICLE: ', filePath);
+		try{
+			var articlePath = filePath.match(/\/data\/(.*)\/.*$/)[1];
+		} catch(e){
+			console.info('UNHANDLED FILE', filePath);
+		}
+
+		if(!mediasQueue[articlePath]){
+			mediasQueue[articlePath] = [];
+		}
+
+		console.info(`\n\nCHANGE FILE: ${articlePath}/${Path.basename(filePath)}`);
 
 		if(/\/data\.md$/.test(filePath)){
 			return readFile(filePath, {
@@ -94,18 +121,45 @@ export default function(Writenode){
 					let attributes = parseMarkdown(rawMarkdown, Path.relative(pathToBlog, filePath));
 					setArticleTemplates(attributes);
 
-					articles.add(createArticle(attributes), {
+					return articles.add(createArticle(attributes), {
 						merge: true
+					});
+				})
+				.then(article => {
+					// add medias (article attributes)
+					return Bluebird.map(article.get('medias'), rawMedia => addMedia(article, rawMedia))
+						.then(medias => article);
+				})
+				.then(article => {
+					// add medias files...
+					return Bluebird.map(mediasQueue[articlePath], mediaPath => {
+						return createMedia(article, mediaPath)
+							.then(rawMedia => addMedia(article, rawMedia))
 					});
 				});
 
-		// } else {
-		// 	console.info(filePath)
+		} else {
+			var article = articles.findWhere({
+				id: articlePath
+			});
+
+			if(article){
+				console.info(`FOUND ARTICLE ${articlePath}`);
+
+				return createMedia(article, filePath)
+					.then(rawMedia => addMedia(article, rawMedia))
+
+			} else {
+				console.info(`ARTICLE NOT FOUND: ${articlePath}
+	PUSH: "${articlePath}/${Path.basename(filePath)}"
+	TO: "${articlePath}" MEDIA QUEUE`);
+
+				mediasQueue[articlePath].push(filePath);
+			}
 		}
 	}
 
 	return watcher.addChangeHandler([
-		// pathToBlog + '/data/**/data.md'
 		pathToBlog + '/data/**/*'
 	], path => handleFileChange(path))
 		.then(a => articles);

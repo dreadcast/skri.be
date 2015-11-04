@@ -16,26 +16,43 @@ export default function(Writenode){
 		function addChangeHandler(matchers, changeHandler){
 			var matcher = anymatch(matchers);
 
-			return Bluebird.each(queue.filter(matcher), filePath => changeHandler(filePath))
+			return Bluebird.each(queue.filter(matcher), filePath => {
+				queue.splice(queue.indexOf(filePath), 1);
+
+				return changeHandler(filePath);
+			})
 				.then(queued => changeHandlers.set(matchers, changeHandler));
+		}
+
+		function execChangeHandlers(path){
+			changeHandlers.forEach((changeHandler, matchers) => {
+				if(anymatch(matchers, path)){
+					// console.info('WATCHER MATCHED: ', path);
+					changeHandler(path);
+				};
+			});
 		}
 
 		let watcher = chokidar.watch([
 			pathToTheme,
 			pathToBlog + '/data/**/*',
 		], {
-			ignored: '.git/**'
+			ignored: /\/\.([a-z|0-9|_|-]+)/i
 		})
-			.on('add', filePath => queue.push(filePath))
+			.on('add', filePath => {
+				// console.info('ADD FILE ', filePath);
+
+				if(Writenode.isReady()){
+					execChangeHandlers(filePath);
+
+				} else {
+					queue.push(filePath)
+				}
+			})
 			.on('change', path => {
 				// console.info('WATCHER CHANGE: ', path);
 
-				changeHandlers.forEach((changeHandler, matchers) => {
-					if(anymatch(matchers, path)){
-						changeHandler(path);
-					};
-				});
-
+				execChangeHandlers(path);
 			})
 			.on('ready', () => {
 				return resolve({
