@@ -63,10 +63,11 @@ export default function(Writenode){
 					});
 				})
 				.then(article => {
-					// add medias (article attributes)
-					return Bluebird.map(article.get('medias'), rawMedia => {
-							return getService('medias').addMedia(article, rawMedia);
-						})
+					return getService('medias').processedRawMedias(
+						article,
+						Path.dirname(filePath),
+						article.get('medias')
+					)
 						.then(medias => article);
 				})
 				.then(article => {
@@ -75,6 +76,7 @@ export default function(Writenode){
 				});
 
 		} else {
+			// if article is not ready then push its media to medias queue
 			getService('medias/local').pushMedia(articlePath, filePath);
 		}
 	}

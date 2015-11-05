@@ -66,7 +66,7 @@ export default function(Writenode){
 		};
 	}
 
-	function getInfo(url){
+	function process(article, url){
 		let { oEmbedUrl, provider } = getOEmbedInfo(url);
 
 		return Request({
@@ -87,14 +87,7 @@ export default function(Writenode){
 			.catch(error => console.info(error));
 	}
 
-	return watcher.addChangeHandler([
-		// whatch *.md changes
-	], path => {
-
-	})
-		.then(queued => {
-			return {
-				getInfo
-			};
-		});
+	return Bluebird.resolve({
+		process
+	});
 }
