@@ -20,7 +20,7 @@ export default function(Writenode){
 
 	}
 
-	function createMedia(article, path){
+	function process(article, path){
 		var articlePath = Path.basename(Path.dirname(path));
 
 		return getInfo(path)
@@ -48,8 +48,6 @@ export default function(Writenode){
 	}
 
 	return Bluebird.resolve({
-		createMedia,
-		getInfo,
-		resize
+		process
 	});
 }

@@ -54,12 +54,12 @@ export default function(Writenode){
 
 				execChangeHandlers(path);
 			})
-			.on('ready', () => {
+			// .on('ready', () => {
 				return resolve({
 					addChangeHandler,
 					watcher,
 					queue,
 				});
-			});
+			// });
 	});
 }
