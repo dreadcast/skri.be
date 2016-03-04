@@ -1,2 +1,2 @@
 require('babel/register')();
-module.exports = require('./Writenode.js');
+module.exports = require('./entry.js');
