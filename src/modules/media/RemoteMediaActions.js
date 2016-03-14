@@ -2,7 +2,7 @@ import Request from 'request-promise';
 import logger from './../../util/logger';
 import { merge, assoc, dissoc } from 'ramda';
 
-import { UPDATE_MEDIA } from './MediaActions';
+import { UPDATE_MEDIA, getRatio } from './MediaActions';
 
 function getOEmbedParams(url){
 	return function(dispatch, getState){
@@ -84,10 +84,12 @@ export function getOEmbedInfo(media, articleId){
 					oEmbed = assoc('html', `<img src="${oEmbed.url}" alt="${oEmbed.caption}">`, oEmbed);
 				}
 
+				media = merge(oEmbed, getRatio(oEmbed.width, oEmbed.height));
+
 				return dispatch({
 					type: UPDATE_MEDIA,
 					mediaId: oEmbed.id,
-					media: oEmbed,
+					media,
 					articleId,
 				});
 			})

@@ -1,8 +1,10 @@
 import { join } from 'path';
-import { assoc, mapObjIndexed, clone, merge } from 'ramda';
+import { assoc, mapObjIndexed, clone, merge, values, keys } from 'ramda';
+import closest from '../../lib/careme/closest';
 import { getLocalMediaInfo } from './LocalMediaActions';
 import { getOEmbedInfo } from './RemoteMediaActions';
 import { PATH_TO_BLOG } from '../../conf';
+import logger from '../../util/logger';
 
 export const UPDATE_MEDIA = 'UPDATE_MEDIA';
 
@@ -71,3 +73,18 @@ var ratios = {
 mapObjIndexed(({ratio, name}) => assoc(name + '-portrait', 1 / ratio, ratios), ratios);
 
 export const RATIOS = ratios;
+
+export function getRatio(width, height) {
+	var actualRatio = width / height,
+		ratioKeys = keys(RATIOS),
+		ratioValues = values(RATIOS),
+		ratio = closest(actualRatio, ratioValues),
+		ratioIndex = ratioValues.indexOf(ratio),
+		ratioName = ratioKeys[ratioIndex];
+
+	return {
+		actualRatio,
+		ratioName,
+		ratio,
+	}
+}

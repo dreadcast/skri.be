@@ -1,7 +1,7 @@
 import { join } from 'path';
 import { merge } from 'ramda';
 import { getImageInfo } from './LocalMediaClient';
-import { UPDATE_MEDIA } from './MediaActions';
+import { UPDATE_MEDIA, getRatio } from './MediaActions';
 import logger from './../../util/logger';
 import { PATH_TO_BLOG } from '../../conf';
 
@@ -16,16 +16,20 @@ export function getLocalMediaInfo(media, articleId){
 					html = `<img src="${media.url}" alt="${media.caption}">`;
 				}
 
+				media = merge(media, {
+					width,
+					height,
+					html,
+					type,
+				});
+
+				media = merge(media, getRatio(width, height));
+
 				return dispatch({
 					type: UPDATE_MEDIA,
 					articleId,
 					mediaId: media.id,
-					media: merge(media, {
-						width,
-						height,
-						html,
-						type,
-					}),
+					media,
 				})
 			})
 			.catch(error => logger.error('Error parsing media info', error));
