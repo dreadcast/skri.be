@@ -74,13 +74,14 @@ mapObjIndexed(({ratio, name}) => assoc(name + '-portrait', 1 / ratio, ratios), r
 
 export const RATIOS = ratios;
 
+const RATIO_KEYS = keys(RATIOS);
+const RATIO_VALUES = values(RATIOS);
+
 export function getRatio(width, height) {
 	var actualRatio = width / height,
-		ratioKeys = keys(RATIOS),
-		ratioValues = values(RATIOS),
-		ratio = closest(actualRatio, ratioValues),
-		ratioIndex = ratioValues.indexOf(ratio),
-		ratioName = ratioKeys[ratioIndex];
+		ratio = closest(actualRatio, RATIO_VALUES),
+		ratioIndex = RATIO_VALUES.indexOf(ratio),
+		ratioName = RATIO_KEYS[ratioIndex];
 
 	return {
 		actualRatio,

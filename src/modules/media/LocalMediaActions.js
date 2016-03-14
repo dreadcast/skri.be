@@ -27,8 +27,8 @@ export function getLocalMediaInfo(media, articleId){
 
 				return dispatch({
 					type: UPDATE_MEDIA,
-					articleId,
 					mediaId: media.id,
+					articleId,
 					media,
 				})
 			})
