@@ -1,7 +1,7 @@
-https://en.wikipedia.org/wiki/Plant
+---
+source: https://en.wikipedia.org/wiki/Plant
+---
+
+# Plants
 
 Plants, also called green plants, are multicellular eukaryotes of the kingdom Plantae. They form an unranked clade Viridiplantae (Latin for green plants) that includes the flowering plants, conifers and other gymnosperms, ferns, clubmosses, hornworts, liverworts, mosses and the green algae. Green plants excludes the red and brown algae, the fungi, archaea, bacteria and animals.
-
-Green plants have cell walls with cellulose and obtain most of their energy from sunlight via photosynthesis by primary chloroplasts, derived from endosymbiosis with cyanobacteria. Their chloroplasts contain chlorophylls a and b which gives them their green color. Some plants are parasitic and have lost the ability to produce normal amounts of chlorophyll or to photosynthesize. Plants are also characterized by sexual reproduction, modular and indeterminate growth, and an alternation of generations, although asexual reproduction is also common.
-
-Precise numbers are difficult to determine, but as of 2010, there are thought to be 300–315 thousand species of plants, of which the great majority, some 260–290 thousand, are seed plants (see the table below).[1] Green plants provide most of the world's molecular oxygen[2] and are the basis of most of the earth's ecologies, especially on land. Plants that produce grains, fruits and vegetables form mankind's basic foodstuffs, and have been domesticated for millennia. Plants are used as ornaments and, until recently and in great variety, they have served as the source of most medicines and drugs. The scientific study of plants is known as botany, a branch of biology.

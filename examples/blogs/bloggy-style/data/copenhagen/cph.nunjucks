@@ -1,0 +1,21 @@
+<article>
+	<header class="Article-header">
+		<h1 class="Article-title">{{ article.title }}</h1>
+	</header>
+
+	<div class="Article-content">
+		{{ article.content|safe }}
+	</div>
+
+	<section class="Article-medias">
+		{% for media in article.medias %}
+			{{ media.html|safe }}
+		{% endfor %}
+	</section>
+	
+	<section class="Article-tags">
+		{% for tag in article.tags %}
+		<a href="/{{ tag }}.json" class="Article-tag">#{{ tag }}</a>
+		{% endfor %}
+	</section>
+</article>

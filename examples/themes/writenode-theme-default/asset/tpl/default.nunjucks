@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,  initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<link rel="shortcut icon" href="/asset/img/favicon.png" type="image/png">
+		<link rel="apple-touch-icon" href="/asset/img/ico.png">
+
+		{% block meta %}{% endblock %}
+
+		<!-- build:css c.css -->
+			<link rel="stylesheet" type="text/css" href="/asset/css/bootstrap.css">
+			<link rel="stylesheet" type="text/css" href="/asset/css/bootstrap-theme.css">
+			<link rel="stylesheet" type="text/css" href="/asset/css/main.css">
+			<link rel="stylesheet" type="text/css" href="/asset/css/article.css">
+		<!-- endbuild -->
+
+		<link rel="alternate" type="application/rss+xml" href="/feed.rss">
+
+		<!-- build:js j.js -->
+		<!-- endbuild -->
+	</head>
+	<body>
+		<header class=" main-header">
+			<h1 class="">Converge</h1>
+		</header>
+		<div class="container">
+
+			<div class="row">
+				<div class="col-xs-12">
+					{% block content %}
+
+					{% endblock content %}
+				</div>
+			</div>
+
+			<footer class="main-footer">
+				<ul class="row">
+					<li class="flt"><a href="/about">About</a></li>
+					<li class="flt"><a href="/contact">Contact</a></li>
+				</ul>
+			</footer>
+		</div>
+	</body>
+</html>

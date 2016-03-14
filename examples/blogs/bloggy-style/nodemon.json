@@ -1,9 +1,8 @@
 {
 	"verbose": true,
-	"watch": ["../../../"],
+	"watch": [
+		"../../../src"
+	],
 	"ext": "js",
-	"ignore": [
-		"data/",
-		"../../../examples"
-	]
+	"ignore": []
 }

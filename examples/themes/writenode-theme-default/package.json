@@ -8,27 +8,24 @@
 		"website": "http://dreadcast.com"
 	},
 
-	"repository": {
-		"type": "git",
-		"url": "git@bitbucket.org:dreadcast/writenode.git"
-	},
-
 	"main": "package.json",
 
 	"config": {
 		"defaultTemplates": {
-			"posts": {
-				"html": "tpl/posts.twig",
-				"json": ["title", "id"]
+			"articleCollection": {
+				"html": "tpl/posts.nunjucks",
+				"json": ["title", "id", "created", "tags"]
 			},
 			"article": {
-				"ajax": "partial/article.twig",
-				"html": "tpl/article.twig",
-				"json": ["title", "id", "content", "medias", "created", "status", "tags", "summary"]
+				"rss": "partial/rss.nunjucks",
+				"partial": "partial/article.nunjucks",
+				"html": "tpl/article.nunjucks",
+				"json": [
+					"title", "id", "content",
+					"medias", "created", "status",
+					"tags", "summary"
+				]
 			}
-		},
-
-		"perPage": 20,
-		"feedLength": 50
+		}
 	}
 }
