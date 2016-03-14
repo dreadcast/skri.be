@@ -13,12 +13,12 @@
 	"config": {
 		"defaultTemplates": {
 			"articleCollection": {
-				"html": "tpl/posts.nunjucks",
+				"html": "tpl/articles.nunjucks",
 				"json": ["title", "id", "created", "tags"]
 			},
 			"article": {
-				"rss": "partial/rss.nunjucks",
-				"partial": "partial/article.nunjucks",
+				"rss": "tpl/partial/rss.nunjucks",
+				"partial": "tpl/partial/article.nunjucks",
 				"html": "tpl/article.nunjucks",
 				"json": [
 					"title", "id", "content",

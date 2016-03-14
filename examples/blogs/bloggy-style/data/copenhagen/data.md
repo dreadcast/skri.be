@@ -2,8 +2,6 @@
 created: 2015-10-27T14:21:33Z
 source: https://en.wikipedia.org/wiki/Copenhagen
 tags: urban,travel,denmark,city
-templates:
-    partial: ./cph.nunjucks
 medias:
     - url: copenhagen-393831_1280.jpg
       caption: Kinky architecture
