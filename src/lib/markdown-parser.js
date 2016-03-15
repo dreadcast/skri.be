@@ -1,5 +1,5 @@
 import FrontMatter from 'front-matter';
-import { assoc, map } from 'ramda';
+import { assoc, map, pipe } from 'ramda';
 import logger from './../util/logger';
 
 import md from 'markdown-it';
@@ -30,57 +30,56 @@ var mdOptions = {
 		.use(checkbox)
 		.use(mark);
 
-function setTags(attributes) {
-	var tags = attributes.tags;
+function setTags(tags) {
+	if(typeof tags == 'string'){
+		tags = tags.split(/,\s?/);
 
-	if(typeof attributes.tags == 'string'){
-		tags = attributes.tags.split(/,\s?/);
-
-	} else if(!attributes.tags) {
+	} else if(!tags) {
 		tags = [];
 	}
 
-	return assoc('tags', tags, attributes);
+	return assoc('tags', tags);
 }
 
-function setId(path, attributes) {
+function setId(path) {
 	var id = path
 		.replace(PATH_TO_BLOG + '/data/', '')
 		.replace('/data.md', '');
 
-	return assoc('id', id, attributes);
+	return assoc('id', id);
 }
 
-function setContent(body, attributes) {
-	var content,
-		parsedContent = body.match(/#(.*)\n/);
+function setContent(body) {
+	var parsedContent = body.match(/#(.*)\n/);
 
 	if(parsedContent){
-		attributes = assoc('title', parsedContent[1], attributes);
-		content = parser.render(parsedContent.input.replace(parsedContent[0], ''));
+		var content = parser.render(parsedContent.input.replace(parsedContent[0], ''));
 
-	} else {
-		content = body;
+		return pipe(
+			assoc('title', parsedContent[1]),
+			assoc('content', content)
+		);
 	}
 
-	return assoc('content', content, attributes);
+	return assoc('content', body);
 }
 
-function setMedias(attributes) {
-	return assoc('medias', map(formatMedia, attributes.medias || []), attributes);
+function setMedias(medias) {
+	return assoc('medias', map(formatMedia, medias || []));
 }
 
-function setTemplates(attributes) {
-	return assoc('templates', attributes.templates || {}, attributes);
-}
+// function setTemplates(templates) {
+// 	return assoc('templates', templates || {});
+// }
 
 export default function parseMarkdown(rawMarkdown, path){
 	let { attributes, body } = FrontMatter(rawMarkdown);
 
-	attributes = setTags(attributes);
-	attributes = setId(path, attributes);
-	attributes = setContent(body, attributes);
-	// attributes = setTemplates(attributes);
-
-	return setMedias(attributes);
+	return pipe(
+		setId(path),
+		setTags(attributes.tags),
+		setMedias(attributes.medias),
+		setContent(body),
+		// setTemplates(attributes.templates)
+	)(attributes);
 }
