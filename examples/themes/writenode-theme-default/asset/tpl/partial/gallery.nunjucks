@@ -1,0 +1,8 @@
+<h2 class="Article-gallery-title">Gallery</h2>
+<section class="Article-medias row">
+	{% for media in article.medias %}
+		<div class="col-xs-3 col-sm-4 media-holder">
+			{% include './media.nunjucks' %}
+		</div>
+	{% endfor %}
+</section>

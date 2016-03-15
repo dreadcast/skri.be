@@ -15,5 +15,6 @@ medias:
 # Forest
 
 A forest is a large area of land covered with trees or other woody vegetation [^ref1]. Hundreds of more precise definitions of forest are used throughout the world, incorporating factors such as tree density, tree height, land use, legal standing and ecological function.
+[![alt: Mapple leaf](forest/maple-leaf-888807_1280.jpg)](forest/maple-leaf-888807_1280.jpg)
 
 [^ref1]: [Forest](http://dictionary.reference.com/browse/forest). Dictionary.com. Retrieved 2014-11-16.

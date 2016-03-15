@@ -1,9 +1,33 @@
 body {
-	background: #d5d5d5;
+	background: #FEFEFE;
+	margin: 0;
 }
 .container {
 	margin: 20px auto;
 	border-radius: 6px;
-	background: #fff;
-	box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
+	/*background: #fff;
+	box-shadow: 0 3px 6px rgba(0, 0, 0, .1);*/
+}
+
+.Header {
+	margin-bottom: 15px;
+	background: #5f5f5f;
+}
+.Header .container {
+	margin: 0 auto;
+}
+.u-hidden {
+	display: none;
+}
+.Header-title {
+}
+.Header-icon {
+	background-image: url(/asset/img/header.png);
+	background-repeat: no-repeat;
+	/*background-size: 80px;*/
+	background-position: 0 0;
+	width: 553px;
+
+	height: 106px;
+	display: block;
 }

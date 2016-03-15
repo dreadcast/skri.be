@@ -1,4 +1,4 @@
-<article>
+<article class="Article">
 	<header class="Article-header">
 		<h1 class="Article-title">{{ article.title }}</h1>
 	</header>
@@ -13,18 +13,7 @@
 		{{ article.content|safe }}
 	</div>
 
-	<section>
-		<ul>
-			{% for media in article.medias %}
-				<li><a href="{{ media.url }}">{{ media.caption or media.id }}</a></li>
-			{% endfor %}
-		</ul>
-	</section>
-
-
-	<section class="Article-medias row">
-		{% for media in article.medias %}
-			<div class="col-sm-6 col-md-4 col-lg-3">{{ media.html|safe }}</div>
-		{% endfor %}
-	</section>
+	{% if article.medias.length > 0 %}
+		{% include './gallery.nunjucks' %}
+	{% endif %}
 </article>

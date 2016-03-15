@@ -17,6 +17,7 @@ export function getLocalMediaInfo(media, articleId){
 				}
 
 				media = merge(media, {
+					provider: 'local',
 					width,
 					height,
 					html,

@@ -1,3 +1,40 @@
-.Article-medias img {
-	width: 100%;
+.embed-responsive-item {
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	/*background-color: #000;*/
+}
+
+.Article-content img {
+	max-width: 100%;
+}
+
+.Article-medias .media-holder {
+	margin-bottom: 30px;
+}
+
+.embed-responsive-square {
+	padding-bottom: 100%;
+}
+.embed-responsive-16by9 {
+	padding-bottom: 56.25%;
+}
+.embed-responsive-4by3 {
+	padding-bottom: 75%;
+}
+.embed-responsive-3by2 {
+	padding-bottom: 66%;
+}
+
+
+.Article h1,
+.Article h2,
+.Article h3,
+.Article h4 {
+	color: #666;
+}
+.Article-content li,
+.Article-content p {
+	font-family: georgia, serif;
+	font-size: 18px;
 }

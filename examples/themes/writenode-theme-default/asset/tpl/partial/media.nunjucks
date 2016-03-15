@@ -1,0 +1,17 @@
+<div class="embed-responsive embed-responsive-square">
+	{% if media.provider == 'local' %}
+		<a
+			href="{{ media.url }}"
+			class="embed-responsive-item embed-responsive-img"
+			style="background-image: url({{ media.url }})"
+		>
+		</a>
+	{% else %}
+		<a
+			href="{{ media.url }}"
+			class="embed-responsive-item embed-responsive-img"
+			style="background-image: url({{ media.thumbnail_url }})"
+		>
+		</a>
+	{% endif %}
+</div>
