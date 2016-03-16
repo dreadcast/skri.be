@@ -43,6 +43,9 @@ function setTags(tags) {
 
 const ARTICLE_ID_RE = /(\/data)\/(.*)\//;
 
+// Better, but no lookbehind in JS :(
+// const ARTICLE_ID_RE = /(?<=\/data\/)(.*)\/(?=.*(\.[a-z|A-Z|0-9])?)/;
+
 export function getArticleId(path){
 	return path.match(ARTICLE_ID_RE)[2];
 }
