@@ -41,12 +41,14 @@ function setTags(tags) {
 	return assoc('tags', tags);
 }
 
-function setId(path) {
-	var id = path
-		.replace(PATH_TO_BLOG + '/data/', '')
-		.replace('/data.md', '');
+const ARTICLE_ID_RE = /(\/data)\/(.*)\//;
 
-	return assoc('id', id);
+export function getArticleId(path){
+	return path.match(ARTICLE_ID_RE)[2];
+}
+
+function setId(path) {
+	return assoc('id', getArticleId(path));
 }
 
 function setContent(body) {
@@ -57,7 +59,7 @@ function setContent(body) {
 
 		return pipe(
 			assoc('title', parsedContent[1]),
-			assoc('content', content)
+			assoc('content', content),
 		);
 	}
 
