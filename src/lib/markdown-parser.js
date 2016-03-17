@@ -11,6 +11,7 @@ import fn from 'markdown-it-footnote';
 
 import { PATH_TO_BLOG } from './../conf';
 import { formatMedia } from '../modules/media/MediaActions';
+import summarize from './curcuma/summarize';
 
 var mdOptions = {
 		highlight: function (str, lang) {
@@ -63,11 +64,13 @@ function setContent(body) {
 		return pipe(
 			assoc('title', parsedContent[1]),
 			assoc('content', content),
+			assoc('summary', summarize(content)),
 		);
 	}
 
 	return assoc('content', body);
 }
+
 
 function setMedias(medias) {
 	return assoc('medias', map(formatMedia, medias || []));
