@@ -10,12 +10,10 @@ function truncate(length, trail = '…', str){
 			str = str.substr(0, index);
 		}
 
-		str = str + trail;
+		return str + trail;
 	}
 
 	return str;
 }
 
-var curried = curry(truncate);
-
-export default curried;
+export default curry(truncate);

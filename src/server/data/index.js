@@ -6,36 +6,17 @@ import { PATH_TO_BLOG, PATH_TO_THEME } from './../../conf';
 import store, { dispatch } from './../../modules/store';
 import getById from './../../lib/careme/getById';
 import logger from './../../util/logger';
+import { parseUrl } from './../../util/urlParser';
 import serveTag from './tag';
 import serveArticle from './article';
-
-function parsePath(url) {
-	var type = 'html',
-		cleanPath = url.replace(/\.html$/, '');
-
-	if(/\.json$/.test(url)) {
-		type = 'json';
-		cleanPath = url.replace(/\.json$/, '');
-
-	} else if(/\/(partial)(\.html)?$/.test(url)) {
-		type = 'partial';
-		cleanPath = url.replace(/\/(partial)(\.html)?$/, '');
-
-	} else if(/\.([a-z0-9]+)$/i.test(url)) {
-		type = 'media';
-		cleanPath = url;
-	}
-
-	cleanPath = cleanPath.replace(/^\//, '');
-
-	return {
-		type,
-		cleanPath,
-	};
-}
+import serveHome from './home';
 
 export default function serveData(request, response, next){
-	let { type, cleanPath } = parsePath(request.url);
+	if(request.url == '/') {
+		return response.end(serveHome());
+	}
+
+	let { type, cleanPath } = parseUrl(request.url);
 
 	if(type == 'media') {
 		return response.sendFile(join(PATH_TO_BLOG, 'data', request.url));

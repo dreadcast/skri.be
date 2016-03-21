@@ -10,6 +10,4 @@ function defaultToWhiteSpace(str) {
 	}
 }
 
-var curried = curry(defaultToWhiteSpace);
-
-export default curried;
+export default curry(defaultToWhiteSpace);

@@ -11,6 +11,4 @@ function summarize(str){
 	)(str);
 }
 
-var curried = curry(summarize);
-
-export default curried;
+export default curry(summarize);

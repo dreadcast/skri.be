@@ -12,6 +12,4 @@ function dasherize(str){
 	)(str);
 }
 
-var curried = curry(dasherize);
-
-export default curried;
+export default curry(dasherize);

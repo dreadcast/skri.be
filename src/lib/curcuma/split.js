@@ -4,6 +4,4 @@ function split(needle, str){
 	return str.split(needle);
 }
 
-var curried = curry(split);
-
-export default curried;
+export default curry(split);

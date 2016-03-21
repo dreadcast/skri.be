@@ -11,7 +11,4 @@ function trim(characters, str){
 	return str.replace(new RegExp('^' + characters + '+|' + characters + '+$', 'g'), '');
 }
 
-
-var curried = curry(trim);
-
-export default curried;
+export default curry(trim);

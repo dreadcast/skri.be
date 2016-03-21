@@ -4,6 +4,4 @@ function toLowerCase(str){
 	return str.toLowerCase();
 }
 
-var curried = curry(toLowerCase);
-
-export default curried;
+export default curry(toLowerCase);

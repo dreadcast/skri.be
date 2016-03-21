@@ -17,6 +17,4 @@ function slugify(str){
 	)(str);
 }
 
-var curried = curry(slugify);
-
-export default curried;
+export default curry(slugify);

@@ -1,6 +1,7 @@
 import FrontMatter from 'front-matter';
 import { assoc, map, pipe } from 'ramda';
 import logger from './../util/logger';
+import { getArticleId } from './../util/urlParser';
 
 import md from 'markdown-it';
 import illuminate from 'illuminate-js';
@@ -42,14 +43,7 @@ function setTags(tags) {
 	return assoc('tags', tags);
 }
 
-const ARTICLE_ID_RE = /(\/data)\/(.*)\//;
 
-// Better, but no lookbehind in JS :(
-// const ARTICLE_ID_RE = /(?<=\/data\/)(.*)\/(?=.*(\.[a-z|A-Z|0-9])?)/;
-
-export function getArticleId(path){
-	return path.match(ARTICLE_ID_RE)[2];
-}
 
 function setId(path) {
 	return assoc('id', getArticleId(path));

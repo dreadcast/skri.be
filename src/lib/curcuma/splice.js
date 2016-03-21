@@ -8,6 +8,4 @@ function splice(i, howmany, substr, str){
 	return arr.join('');
 }
 
-var curried = curry(splice);
-
-export default curried;
+export default curry(splice);
