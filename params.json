@@ -1,0 +1,6 @@
+{
+  "name": "Skri.be",
+  "tagline": "Simple static blog generator for Node JS",
+  "body": "# README #\r\n\r\nSkri.be is a simple static blog generator powered by redux.\r\n\r\nThe template engine used is [Nunjucks](https://github.com/mozilla/nunjucks).\r\n\r\n## Status ##\r\n\r\nAt this point, skri.be is a draft and, thus, should not be used.\r\n",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
