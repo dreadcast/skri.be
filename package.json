@@ -1,15 +1,15 @@
 {
-	"name": "writenode",
-	"version": "0.2.1",
-	"homepage": "http://converge.fr",
+	"name": "skri.be",
+	"version": "0.3.0",
+	"homepage": "http://skri.be",
 	"description": "Simple static blog generator",
 	"author": {
 		"name": "Raphael Gully",
 		"website": "http://dreadcast.com"
 	},
 
-	"readmeFilename": "Readme.md",
-	"homepage": "https://github.com/dreadcast/writenode",
+	"readmeFilename": "README.md",
+	"homepage": "https://github.com/dreadcast/skri.be",
 
 	"keywords": [
 		"website",
@@ -21,10 +21,10 @@
 
 	"repository": {
 		"type": "git",
-		"url": "git@bitbucket.org:dreadcast/writenode.git"
+		"url": "git@bitbucket.org:dreadcast/skri.be.git"
 	},
 	"bugs": {
-		"url": "https://github.com/dreadcast/writenode/issues"
+		"url": "https://github.com/dreadcast/skri.be/issues"
 	},
 
 	"dependencies": {
