@@ -54,6 +54,7 @@
 
 		"swig": "1.4.2",
 		"nunjucks": "2.4.0",
+		"nunjucks-date": "1.2.0",
 
 		"html-minifier": "1.0.0",
 		"node-useref": "0.3.15",

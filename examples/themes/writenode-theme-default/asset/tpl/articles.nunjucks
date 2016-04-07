@@ -1,6 +1,29 @@
 {% block meta %}
-	<title>Converge - &laquo; {{ currentTag }} &raquo; tagged articles</title>
-	<meta name="description" content="Have a look at &laquo; {{ tag }} &raquo; tagged articles on Converge.">
+	<title>Converge - &laquo; {{ tag }} &raquo; tagged articles</title>
+	<meta
+		name="description"
+		content="Have a look at &laquo; {{ tag }} &raquo; tagged articles on Converge.">
 {% endblock %}
 
-{% extends 'default.twig' %}
+{% extends './default.nunjucks' %}
+
+{% block content %}
+	<ul>
+		{% for article in articles %}
+			<li>
+				<article>
+					<h2>
+						<a href="{{ article.id }}">
+							{{ article.title }}
+						</a>
+						<br>
+						<small>
+							{{ article.created|date('LL') }}
+						</small>
+					</h2>
+					<p>{{ article.summary }}</p>
+				</article>
+			</li>
+		{% endfor %}
+	</ul>
+{% endblock content %}

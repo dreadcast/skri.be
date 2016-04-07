@@ -1,11 +1,17 @@
 <article class="Article">
 	<header class="Article-header">
-		<h1 class="Article-title">{{ article.title }}</h1>
+		<h1 class="Article-title">
+			{{ article.title }}
+			<br>
+			<small>
+				{{ article.created|date('LL') }}
+			</small>
+		</h1>
 	</header>
 
 	<section class="Article-tags">
 		{% for tag in article.tags %}
-			<a href="/{{ tag }}.json" class="Article-tag">#{{ tag }}</a>
+			<a href="/{{ tag }}" class="Article-tag">#{{ tag }}</a>
 		{% endfor %}
 	</section>
 
