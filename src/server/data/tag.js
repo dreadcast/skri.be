@@ -28,7 +28,9 @@ function getTagged(articles, tag, fields){
 }
 
 export default function serveTag(articles, tag, response, type){
-	articles = filter(({ tags }) => contains(tag, tags), articles);
+	if(tag != undefined) {
+		articles = filter(({ tags }) => contains(tag, tags), articles);
+	}
 
 	switch (type) {
 		case 'json':
