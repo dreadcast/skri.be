@@ -1,7 +1,7 @@
 import watch from './watcher';
 import server from './server';
 import logger from './util/logger';
-import { PATH_TO_BLOG, PATH_TO_THEME } from './conf';
+import CONF from './conf';
 
 var watcher = watch({
 	onReady(){
@@ -9,13 +9,13 @@ var watcher = watch({
 	},
 
 	onQueue(path){
-		// path = path.replace(PATH_TO_BLOG, '').replace(PATH_TO_THEME, '');
+		// path = path.replace(CONF.pathToBlog, '').replace(CONF.pathToTheme, '');
 
 		// logger.info(`QUEUE: ${path}`);
 	},
 
 	onPop(path, result, type){
-		// path = path.replace(PATH_TO_BLOG, '').replace(PATH_TO_THEME, '');
+		// path = path.replace(CONF.pathToBlog, '').replace(CONF.pathToTheme, '');
 
 		// logger.info(`POP ${type}: ${path}`);
 	},

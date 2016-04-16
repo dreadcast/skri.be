@@ -7,7 +7,6 @@ import { fetchArticle } from './ArticleClient.js';
 import { addTags } from './../tag/TagActions.js';
 import { UPDATE_MEDIA, getMediaInfo } from './../media/MediaActions.js';
 import logger from './../../util/logger.js';
-import { PATH_TO_THEME, PATH_TO_BLOG } from './../../conf.js';
 import getById from './../../lib/careme/getById.js';
 
 const writeJson = Bluebird.promisify(fs.writeJson);

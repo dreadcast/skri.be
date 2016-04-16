@@ -3,7 +3,6 @@ import { assoc, mapObjIndexed, clone, merge, values, keys } from 'ramda';
 import closest from '../../lib/careme/closest';
 import { getLocalMediaInfo } from './LocalMediaActions';
 import { getOEmbedInfo } from './RemoteMediaActions';
-import { PATH_TO_BLOG } from '../../conf';
 import logger from '../../util/logger';
 
 export const UPDATE_MEDIA = 'UPDATE_MEDIA';

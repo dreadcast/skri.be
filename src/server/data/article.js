@@ -4,14 +4,9 @@ import nunjucksDate from 'nunjucks-date';
 import logger from './../../util/logger';
 import { assoc, mapObjIndexed } from 'ramda';
 
-import {
-	PATH_TO_THEME,
-	PATH_TO_BLOG,
-	BLOG_TEMPLATE_PREFIX,
-	THEME_TEMPLATE_PREFIX
-} from './../../conf';
+import CONF from './../../conf';
 
-var nunjucksEnv = nunjucks.configure(PATH_TO_THEME, {
+var nunjucksEnv = nunjucks.configure(CONF.pathToTheme, {
 	noCache: true,
 	watch: true,
 });
@@ -26,8 +21,8 @@ export default function serveArticle(article, response, type){
 		let templates = mapObjIndexed(template => {
 			if(typeof template == 'string'){
 				template = template
-					.replace(THEME_TEMPLATE_PREFIX, '')
-					// .replace(BLOG_TEMPLATE_PREFIX, PATH_TO_BLOG + '/')
+					.replace(CONF.themeTemplatePrefix, '')
+					// .replace(CONF.blogTemplatePrefix, CONF.pathToBlog + '/')
 			}
 
 			return template;
@@ -37,7 +32,7 @@ export default function serveArticle(article, response, type){
 
 		let result = nunjucksEnv.render(article.templates[type], {
 			article,
-			PATH_TO_THEME,
+			CONF,
 		});
 
 		return response.end(result);

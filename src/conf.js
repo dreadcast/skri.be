@@ -1,30 +1,49 @@
 import { resolve, join } from 'path';
-import { mapObjIndexed } from 'ramda';
+import { mapObjIndexed, assocPath, assoc } from 'ramda';
+import merge from 'lodash/merge';
+import logger from './util/logger';
+
+var themeTemplatePrefix = '%THEME%';
+var blogTemplatePrefix = '%BLOG%';
+
+var pathToTheme,
+	pathToBlog = resolve('.'),
+	blogConf = require(join(pathToBlog, 'package.json')).config;
 
 
-export const PATH_TO_BLOG = resolve('.');
-export const CONF = require(join(PATH_TO_BLOG, 'package.json')).config;
+if(blogConf.theme.path) {
+	pathToTheme = resolve(blogConf.theme.path);
 
-var pathToTheme;
-
-if(CONF.theme.path) {
-	pathToTheme = resolve(CONF.theme.path);
-
-} else if(CONF.path.name) {
-	pathToTheme = resolve(join(PATH_TO_BLOG, 'node_modules', CONF.theme.name));
+} else if(blogConf.path.name) {
+	pathToTheme = resolve(join(pathToBlog, 'node_modules', blogConf.theme.name));
 }
 
-export const PATH_TO_THEME = pathToTheme;
+var themeConf = require(join(pathToTheme, 'package.json')).config;
 
-export const THEME_CONF = require(join(PATH_TO_THEME, 'package.json')).config;
+blogConf = merge({
+	themeTemplatePrefix,
+	blogTemplatePrefix,
+	pathToBlog,
+	pathToTheme,
+	theme: themeConf,
+}, blogConf);
 
-export const THEME_TEMPLATE_PREFIX = '%THEME%';
-export const BLOG_TEMPLATE_PREFIX = '%BLOG%';
+const CONF = assocPath(
+	['theme', 'defaultTemplates', 'article'],
+	prefixTemplates(blogConf.theme.defaultTemplates.article),
+	blogConf
+);
 
-THEME_CONF.defaultTemplates.article = mapObjIndexed(template => {
-	if(typeof template == 'string'){
-		template = THEME_TEMPLATE_PREFIX + template;
-	}
+export default CONF;
 
-	return template;
-}, THEME_CONF.defaultTemplates.article);
+logger.info('Blog config', CONF)
+
+function prefixTemplates(templates){
+	return mapObjIndexed(template => {
+		if(typeof template == 'string'){
+			template = themeTemplatePrefix + template;
+		}
+
+		return template;
+	}, templates);
+}

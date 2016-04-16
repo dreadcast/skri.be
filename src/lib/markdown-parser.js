@@ -10,7 +10,7 @@ import checkbox from 'markdown-it-checkbox';
 import mark from 'markdown-it-mark';
 import fn from 'markdown-it-footnote';
 
-import { PATH_TO_BLOG, BLOG_TEMPLATE_PREFIX } from './../conf';
+import { blogTemplatePrefix } from './../conf';
 import { formatMedia } from '../modules/media/MediaActions';
 import summarize from './curcuma/summarize';
 
@@ -70,7 +70,7 @@ function setMedias(medias) {
 function setTemplates(templates) {
 	templates = mapObjIndexed(template => {
 		if(typeof template == 'string'){
-			template = BLOG_TEMPLATE_PREFIX + template;
+			template = blogTemplatePrefix + template;
 		}
 
 		return template;

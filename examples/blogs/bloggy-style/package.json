@@ -1,8 +1,8 @@
 {
-	"name": "Converge",
+	"name": "Skri.be",
 	"version": "0.0.1",
-	"homepage": "http://converge.fr",
-	"description": "Converge blog",
+	"homepage": "http://skri.be",
+	"description": "Skri.be blog",
 	"author": {
 		"name": "Raphael Gully",
 		"website": "http://dreadcast.com"
@@ -21,8 +21,7 @@
 		"theme": {
 			"perPage": 20,
 			"feedLength": 50,
-			"path": "./../../themes/writenode-theme-default",
-			"name": "writenode-theme-default"
+			"path": "./../../themes/writenode-theme-default"
 		},
 		"title": "Converge - architecture, product design, landscape &amp; more",
 		"description": "Converge blog is about architecture, product & furniture design, mobility, urbanisme, landscape, art, fashion & a lot more.",

@@ -4,7 +4,7 @@ import Bluebird from 'bluebird';
 import chokidar from 'chokidar';
 import { getArticle } from './modules/article/ArticleActions';
 import store, { dispatch } from './modules/store';
-import { PATH_TO_BLOG, PATH_TO_THEME } from './conf';
+import CONF from './conf';
 
 export default function watch(options){
 	options = merge({
@@ -16,7 +16,7 @@ export default function watch(options){
 
 	let queue = [],
 		isRunning = false,
-		pathToThemeReg = new RegExp('^' + PATH_TO_THEME);
+		pathToThemeReg = new RegExp('^' + CONF.pathToTheme);
 
 	function queueItem(path) {
 		path = resolve(path);
@@ -81,8 +81,8 @@ export default function watch(options){
 	}
 
 	chokidar.watch([
-		PATH_TO_BLOG + '/data/**/*',
-		PATH_TO_THEME + '/asset/**/*',
+		CONF.pathToBlog + '/data/**/*',
+		CONF.pathToTheme + '/asset/**/*',
 	], {
 		ignored: /\/\.([a-z|0-9|_|-]+)/i
 	})

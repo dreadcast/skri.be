@@ -11,6 +11,8 @@
 	"main": "package.json",
 
 	"config": {
+		"perPage": 10,
+		"feedLength": 10,
 		"defaultTemplates": {
 			"articleCollection": {
 				"html": "asset/tpl/articles.nunjucks",

@@ -3,7 +3,7 @@ import express from 'express';
 import logger from './../util/logger';
 import serveAsset from './asset';
 import serveData from './data';
-import { CONF } from './../conf';
+import CONF from './../conf';
 
 const app = express();
 

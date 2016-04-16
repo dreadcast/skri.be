@@ -1,11 +1,11 @@
 import { join } from 'path';
 import { map, pick, filter, contains } from 'ramda';
-import { THEME_CONF, CONF, PATH_TO_THEME } from './../../conf';
+import CONF from './../../conf';
 import logger from './../../util/logger';
 import nunjucks from 'nunjucks';
 import nunjucksDate from 'nunjucks-date';
 
-var nunjucksEnv = nunjucks.configure(PATH_TO_THEME, {
+var nunjucksEnv = nunjucks.configure(CONF.pathToTheme, {
 	noCache: true,
 	watch: true,
 });
@@ -14,7 +14,7 @@ nunjucksEnv.addFilter('date', nunjucksDate);
 var {
 	json: jsonTemplate,
 	html: htmlTemplate,
-} = THEME_CONF.defaultTemplates.articleCollection;
+} = CONF.theme.defaultTemplates.articleCollection;
 
 function getTagged(articles, tag, fields){
 	return {
@@ -27,7 +27,7 @@ function getTagged(articles, tag, fields){
 	}
 }
 
-export default function serveTag(articles, tag, response, type){
+export default function serveArticleCollection(articles, tag, response, type){
 	if(tag != undefined) {
 		articles = filter(({ tags }) => contains(tag, tags), articles);
 	}
@@ -41,7 +41,7 @@ export default function serveTag(articles, tag, response, type){
 			let result = nunjucksEnv.render(htmlTemplate, {
 				articles,
 				tag,
-				PATH_TO_THEME,
+				CONF,
 			});
 
 			return response.end(result);

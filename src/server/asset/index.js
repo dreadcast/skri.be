@@ -1,4 +1,4 @@
-import { PATH_TO_THEME, CONF } from './../../conf';
+import CONF from './../../conf';
 import { join, resolve, extname } from 'path';
 import fs from 'fs';
 import Bluebird from 'bluebird';
@@ -7,7 +7,7 @@ import logger from './../../util/logger';
 const readFile = Bluebird.promisify(fs.readFile);
 
 export default function serveAsset(request, response, next) {
-	let path = join(PATH_TO_THEME, request.url);
+	let path = join(CONF.pathToTheme, request.url);
 
 	switch (extname(request.url)) {
 		case '.jpg':

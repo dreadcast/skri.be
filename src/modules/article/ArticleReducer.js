@@ -6,13 +6,13 @@ import logger from './../../util/logger';
 
 import { SET_ARTICLE_TEMPLATES, UPDATE_ARTICLE } from './ArticleActions.js';
 import { UPDATE_MEDIA } from '../media/MediaActions.js';
-import { THEME_CONF } from './../../conf';
+import CONF from './../../conf';
 
 var defaultArticle = {
 	id: '',
 	title: '',
 	content: '',
-	templates: THEME_CONF.defaultTemplates.article,
+	templates: CONF.theme.defaultTemplates.article,
 	medias: [],
 };
 

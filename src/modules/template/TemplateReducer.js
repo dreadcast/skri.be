@@ -1,15 +1,15 @@
 import { merge } from 'ramda';
 
 import logger from './../../util/logger';
-import { THEME_CONF } from './../../conf';
+import CONF from './../../conf';
 import { SET_ARTICLE_TEMPLATES } from './../article/ArticleActions.js';
 
 export default function updateTemplates(){
-	return THEME_CONF.defaultTemplates;
+	return CONF.theme.defaultTemplates;
 }
 
-export function updateArticleTemplates(state = THEME_CONF.defaultTemplates.article, action) {
-	state = merge(THEME_CONF.defaultTemplates.article, state);
+export function updateArticleTemplates(state = CONF.theme.defaultTemplates.article, action) {
+	state = merge(CONF.theme.defaultTemplates.article, state);
 
 	switch (action.type) {
 		case SET_ARTICLE_TEMPLATES:

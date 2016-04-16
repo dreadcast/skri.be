@@ -3,11 +3,11 @@ import { merge } from 'ramda';
 import { getImageInfo } from './LocalMediaClient';
 import { UPDATE_MEDIA, getRatio } from './MediaActions';
 import logger from './../../util/logger';
-import { PATH_TO_BLOG } from '../../conf';
+import CONF from '../../conf';
 
 export function getLocalMediaInfo(media, articleId){
 	return function(dispatch, getState){
-		return getImageInfo(join(PATH_TO_BLOG, 'data', media.url))
+		return getImageInfo(join(CONF.pathToBlog, 'data', media.url))
 			.then(info => {
 				let html,
 					{ width, height, type, } = info;
