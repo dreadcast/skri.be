@@ -1,5 +1,5 @@
 {% extends './default.nunjucks' %}
 
 {% block content %}
-	{% include PATH_TO_THEME + '/asset/' + article.templates.partial %}
+	{% include article.templates.partial %}
 {% endblock content %}

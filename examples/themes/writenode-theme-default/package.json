@@ -13,13 +13,13 @@
 	"config": {
 		"defaultTemplates": {
 			"articleCollection": {
-				"html": "tpl/articles.nunjucks",
+				"html": "asset/tpl/articles.nunjucks",
 				"json": ["title", "id", "created", "tags"]
 			},
 			"article": {
-				"rss": "tpl/partial/rss.nunjucks",
-				"partial": "tpl/partial/article.nunjucks",
-				"html": "tpl/article.nunjucks",
+				"rss": "asset/tpl/partial/rss.nunjucks",
+				"partial": "asset/tpl/partial/article.nunjucks",
+				"html": "asset/tpl/article.nunjucks",
 				"json": [
 					"title", "id", "content",
 					"medias", "created", "status",

@@ -1,5 +1,5 @@
 import FrontMatter from 'front-matter';
-import { assoc, map, pipe } from 'ramda';
+import { assoc, map, pipe, mapObjIndexed } from 'ramda';
 import logger from './../util/logger';
 import { getArticleId } from './../util/urlParser';
 
@@ -10,7 +10,7 @@ import checkbox from 'markdown-it-checkbox';
 import mark from 'markdown-it-mark';
 import fn from 'markdown-it-footnote';
 
-import { PATH_TO_BLOG } from './../conf';
+import { PATH_TO_BLOG, BLOG_TEMPLATE_PREFIX } from './../conf';
 import { formatMedia } from '../modules/media/MediaActions';
 import summarize from './curcuma/summarize';
 
@@ -43,8 +43,6 @@ function setTags(tags) {
 	return assoc('tags', tags);
 }
 
-
-
 function setId(path) {
 	return assoc('id', getArticleId(path));
 }
@@ -65,14 +63,21 @@ function setContent(body) {
 	return assoc('content', body);
 }
 
-
 function setMedias(medias) {
 	return assoc('medias', map(formatMedia, medias || []));
 }
 
-// function setTemplates(templates) {
-// 	return assoc('templates', templates || {});
-// }
+function setTemplates(templates) {
+	templates = mapObjIndexed(template => {
+		if(typeof template == 'string'){
+			template = BLOG_TEMPLATE_PREFIX + template;
+		}
+
+		return template;
+	}, templates || {});
+
+	return assoc('templates', templates);
+}
 
 export default function parseMarkdown(rawMarkdown, path){
 	let { attributes, body } = FrontMatter(rawMarkdown);
@@ -82,6 +87,6 @@ export default function parseMarkdown(rawMarkdown, path){
 		setTags(attributes.tags),
 		setMedias(attributes.medias),
 		setContent(body),
-		// setTemplates(attributes.templates)
+		setTemplates(attributes.templates),
 	)(attributes);
 }

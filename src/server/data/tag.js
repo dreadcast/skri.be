@@ -38,9 +38,7 @@ export default function serveTag(articles, tag, response, type){
 			break;
 
 		default:
-			let pathToTpl = join('asset', htmlTemplate);
-
-			let result = nunjucksEnv.render(pathToTpl, {
+			let result = nunjucksEnv.render(htmlTemplate, {
 				articles,
 				tag,
 				PATH_TO_THEME,

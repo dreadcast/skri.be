@@ -12,8 +12,10 @@ import serveArticle from './article';
 import serveHome from './home';
 
 export default function serveData(request, response, next){
+	let state = store.getState();
+
 	if(request.url == '/') {
-		return response.end(serveHome());
+		return serveTag(state.articles, undefined, response, type);
 	}
 
 	let { type, cleanPath } = parseUrl(request.url);
@@ -21,8 +23,6 @@ export default function serveData(request, response, next){
 	if(type == 'media') {
 		return response.sendFile(join(PATH_TO_BLOG, 'data', request.url));
 	}
-
-	let state = store.getState();
 
 	if(contains(cleanPath, state.tag)) {
 		return serveTag(state.articles, cleanPath, response, type)
