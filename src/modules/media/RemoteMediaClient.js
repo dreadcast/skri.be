@@ -64,6 +64,8 @@ export function getOEmbedParams(url){
 export function getOEmbedData(url){
 	let { oEmbedUrl, provider } = getOEmbedParams(url);
 
+	logger.info('FETCHING REMOTE MEDIA INFO', url);
+
 	return Request({
 		method: 'GET',
 		json: true,

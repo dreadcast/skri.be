@@ -6,6 +6,8 @@ import logger from './../../util/logger';
 var readFile = Bluebird.promisify(fs.readFile);
 
 export function getImageInfo(path){
+	logger.info('FETCHING LOCAL MEDIA INFO', path);
+
 	return readFile(path)
 		.then(imageinfo)
 		.catch(error => logger.error('Error reading file ' + path, error));
