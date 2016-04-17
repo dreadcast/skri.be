@@ -3,30 +3,28 @@ import server from './server';
 import logger from './util/logger';
 import CONF from './conf';
 
-var watcher = watch({
-	onReady(){
-		logger.info('WATCHER READY');
-	},
+import buildArticles from './build/data/article';
 
-	onQueue(path){
-		// path = path.replace(CONF.pathToBlog, '').replace(CONF.pathToTheme, '');
+logger.info('Blog config', CONF)
 
-		// logger.info(`QUEUE: ${path}`);
-	},
+export function dev() {
+	watch({
+		onReady(){
+			logger.info('WATCHER READY');
+		},
 
-	onPop(path, result, type){
-		// path = path.replace(CONF.pathToBlog, '').replace(CONF.pathToTheme, '');
+		onComplete(state){
+			logger.log(state);
+		}
+	});
 
-		// logger.info(`POP ${type}: ${path}`);
-	},
-
-	onComplete(state){
-		logger.log(state);
-	}
-});
-
-export var dev = server.start;
+	server.start();
+}
 
 export function build(){
-
+	watch({
+		onComplete(state){
+			buildArticles(state.articles);
+		}
+	});
 }
