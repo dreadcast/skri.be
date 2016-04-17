@@ -36,8 +36,6 @@ const CONF = assocPath(
 
 export default CONF;
 
-logger.info('Blog config', CONF)
-
 function prefixTemplates(templates){
 	return mapObjIndexed(template => {
 		if(typeof template == 'string'){

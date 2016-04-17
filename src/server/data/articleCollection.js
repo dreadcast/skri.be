@@ -1,31 +1,6 @@
-import { join } from 'path';
-import { map, pick, filter, contains } from 'ramda';
-import CONF from './../../conf';
+import { filter, contains } from 'ramda';
 import logger from './../../util/logger';
-import nunjucks from 'nunjucks';
-import nunjucksDate from 'nunjucks-date';
-
-var nunjucksEnv = nunjucks.configure(CONF.pathToTheme, {
-	noCache: true,
-	watch: true,
-});
-nunjucksEnv.addFilter('date', nunjucksDate);
-
-var {
-	json: jsonTemplate,
-	html: htmlTemplate,
-} = CONF.theme.defaultTemplates.articleCollection;
-
-function getTagged(articles, tag, fields){
-	return {
-		pager: {
-			count: articles.length,
-			totalPages: Math.ceil(articles.length / CONF.theme.perPage),
-		},
-		articles: map(article => pick(fields, article), articles),
-		tag,
-	}
-}
+import render, { getTagged } from './../../view/articleCollection';
 
 export default function serveArticleCollection(articles, tag, response, type){
 	if(tag != undefined) {
@@ -34,17 +9,11 @@ export default function serveArticleCollection(articles, tag, response, type){
 
 	switch (type) {
 		case 'json':
-			return response.json(getTagged(articles, tag, jsonTemplate));
+			return response.json(getTagged(articles, tag));
 			break;
 
 		default:
-			let result = nunjucksEnv.render(htmlTemplate, {
-				articles,
-				tag,
-				CONF,
-			});
-
-			return response.end(result);
+			return response.end(render(articles, tag));
 			break;
 	}
 }

@@ -13,12 +13,11 @@ import serveHome from './home';
 
 export default function serveData(request, response, next){
 	let state = store.getState();
+	let { type, cleanPath } = parseUrl(request.url);
 
 	if(request.url == '/') {
 		return serveArticleCollection(state.articles, undefined, response, type);
 	}
-
-	let { type, cleanPath } = parseUrl(request.url);
 
 	if(type == 'media') {
 		return response.sendFile(join(CONF.pathToBlog, 'data', request.url));
