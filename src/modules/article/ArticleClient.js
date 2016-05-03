@@ -80,6 +80,7 @@ export function fetchArticle(path){
 			}
 
 			return outputFile(sumPath, hash)
-				.then(result => parseMarkdown(mdData, path));
+				.then(result => parseMarkdown(mdData, path))
+				.then(assoc('fromCache', false));
 		})
 }

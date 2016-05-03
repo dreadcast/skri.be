@@ -1,9 +1,10 @@
-import { relative, resolve, dirname, join } from 'path';
+import { resolve } from 'path';
 import { merge } from 'ramda';
 import Bluebird from 'bluebird';
 import chokidar from 'chokidar';
-import { getArticle } from './modules/article/ArticleActions';
 import store, { dispatch } from './modules/store';
+import { getArticle } from './modules/article/ArticleActions';
+// import { cacheArticles } from './util/cache';
 import CONF from './conf';
 
 export default function watch(options){
@@ -74,11 +75,16 @@ export default function watch(options){
 
 				isRunning = false;
 
-				options.onComplete(store.getState());
+				var state = store.getState();
+
+				options.onComplete(state);
+
+				// cacheArticles(state.articles);
 
 				return null;
 			})
 	}
+
 
 	chokidar.watch([
 		CONF.pathToBlog + '/data/**/*',

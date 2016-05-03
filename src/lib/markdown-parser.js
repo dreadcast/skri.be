@@ -46,6 +46,9 @@ function setTags(tags) {
 function setId(path) {
 	return assoc('id', getArticleId(path));
 }
+function setUrl(path) {
+	return assoc('url', getArticleId(path));
+}
 
 function setContent(body) {
 	var parsedContent = body.match(/#(.*)\n/);
@@ -84,6 +87,7 @@ export default function parseMarkdown(rawMarkdown, path){
 
 	return pipe(
 		setId(path),
+		setUrl(path),
 		setTags(attributes.tags),
 		setMedias(attributes.medias),
 		setContent(body),

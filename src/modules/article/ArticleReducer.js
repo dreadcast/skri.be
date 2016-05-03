@@ -10,6 +10,7 @@ import CONF from './../../conf';
 
 var defaultArticle = {
 	id: '',
+	url: '',
 	title: '',
 	content: '',
 	templates: CONF.theme.defaultTemplates.article,

@@ -1,32 +1,34 @@
-import { join, relative } from 'path';
-import { merge, mapObjIndexed, keys } from 'ramda';
+import { merge, mapObjIndexed, keys, contains } from 'ramda';
 import Bluebird from 'bluebird';
-import fs from 'fs-extra';
 
 import { fetchArticle } from './ArticleClient.js';
 import { addTags } from './../tag/TagActions.js';
 import { UPDATE_MEDIA, getMediaInfo } from './../media/MediaActions.js';
 import logger from './../../util/logger.js';
 import getById from './../../lib/careme/getById.js';
+import { writeCacheArticle } from './../../util/cache';
 
-const writeJson = Bluebird.promisify(fs.writeJson);
-
+export const REPORT_COLLISION = 'REPORT_COLLISION';
 export const UPDATE_ARTICLE = 'UPDATE_ARTICLE';
 export const SET_ARTICLE_TEMPLATES = 'SET_ARTICLE_TEMPLATES';
 
 function updateArticle(article){
 	return function(dispatch, getState){
-		let { tags, id } = article;
-
-		dispatch(addTags(tags));
+		dispatch(addTags(article.tags));
 
 		dispatch({
 			type: UPDATE_ARTICLE,
-			articleId: id,
+			articleId: article.id,
 			article,
 		});
 
-		return article;
+		// article = getById(
+		// 	article.id,
+		// 	getState().articles
+		// );
+
+		// return writeCacheArticle(article)
+		// 	.then(result => article);
 	}
 }
 
@@ -39,15 +41,6 @@ function updateMedias(article){
 			})
 			.then(medias => article);
 	}
-}
-
-function writeCacheArticle(article, path) {
-	var cachePath = path.replace(/data\.md$/, '.jsoncache');
-
-	logger.info('WRITING DATA CACHE', cachePath);
-
-	return writeJson(cachePath, article)
-		.then(result => article)
 }
 
 function setArticleTemplates(article){
@@ -68,26 +61,39 @@ function setArticleTemplates(article){
 export function getArticle(path){
 	return function(dispatch, getState){
 		return fetchArticle(path)
+			// .then(article => dispatch(updateArticle(article)))
 			.then(article => {
-				return new Bluebird(resolve => {
-					dispatch(updateArticle(article));
+				dispatch(updateArticle(article))
 
-					if(article.fromCache) {
-						resolve(article);
+				if(article.fromCache) {
+					return article;
 
-					} else {
-						dispatch(setArticleTemplates(article))
-						dispatch(updateMedias(article))
-							.then(article => {
-								let articles = getState().articles;
+				} else {
+					dispatch(setArticleTemplates(article))
 
-								article = getById(article.id, articles);
+					return dispatch(updateMedias(article))
+						.then(article => {
+							article = getById(
+								article.id,
+								getState().articles
+							);
 
-								return writeCacheArticle(article, path)
-									.then(result => resolve(article));
-							});
-					}
-				});
+							return writeCacheArticle(article);
+						})
+						.then(result => article);
+				}
 			});
+	}
+}
+
+export function reportCollision(article, tags){
+	return function(dispatch, getState) {
+		if(contains(article.id, tags || getState().tag)) {
+			dispatch({
+				type: REPORT_COLLISION,
+				articleId: article.id,
+				article
+			})
+		}
 	}
 }

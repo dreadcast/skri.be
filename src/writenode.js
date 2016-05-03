@@ -14,7 +14,8 @@ export function dev() {
 		},
 
 		onComplete(state){
-			logger.log(state);
+			logger.info('WATCHER COMPLETE');
+			// logger.log(state);
 		}
 	});
 
