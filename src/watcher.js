@@ -11,7 +11,7 @@ export default function watch(options){
 	options = merge({
 		onReady(){},
 		onQueue(path){},
-		onPop(path, result, type){},
+		onPop(path, result){},
 		onComplete(state){},
 	}, options);
 
@@ -46,20 +46,14 @@ export default function watch(options){
 			type,
 			path = queue.shift();
 
-		if(pathToThemeReg.test(path)) {
-			type = 'ASSET';
-			result = handleNone(path);
-
-		} else if(/\.md$/.test(path)) {
-			type = 'ARTICLE';
+		if(/\.md$/.test(path)) {
 			result = getArticle(path);
 
 		} else {
-			type = 'NONE';
 			result = handleNone(path);
 		}
 
-		options.onPop(path, result, type);
+		options.onPop(path, result);
 
 		return result;
 	}
@@ -76,19 +70,16 @@ export default function watch(options){
 				isRunning = false;
 
 				var state = store.getState();
-
 				options.onComplete(state);
 
-				// cacheArticles(state.articles);
-
 				return null;
-			})
+			});
 	}
 
 
 	chokidar.watch([
 		CONF.pathToBlog + '/data/**/*',
-		CONF.pathToTheme + '/asset/**/*',
+		// CONF.pathToTheme + '/asset/**/*',
 	], {
 		ignored: /\/\.([a-z|0-9|_|-]+)/i
 	})
@@ -98,6 +89,5 @@ export default function watch(options){
 
 	return {
 		queue,
-
 	}
 }

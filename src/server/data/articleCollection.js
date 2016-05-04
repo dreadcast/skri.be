@@ -3,7 +3,7 @@ import logger from './../../util/logger';
 import render, { getTagged } from './../../view/articleCollection';
 
 export default function serveArticleCollection(articles, tag, response, type){
-	var taggedArticles = getTagged(articles);
+	var taggedArticles = getTagged(articles, tag);
 
 	switch (type) {
 		case 'json':

@@ -20,7 +20,7 @@ function testServe() {
 	open('http://localhost:' + testPort);
 }
 
-export default function build(state) {
+export default function buildData(state) {
 	return buildArticles(state.articles)
 		.then(result => buildArticleCollections(state))
 		.then(testServe);

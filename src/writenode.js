@@ -3,7 +3,7 @@ import server from './server';
 import logger from './util/logger';
 import CONF from './conf';
 
-import _build from './build/data';
+import _build from './build';
 
 logger.info('Blog config', CONF)
 
