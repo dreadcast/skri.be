@@ -13,7 +13,7 @@
 			<li>
 				<article>
 					<h2>
-						<a href="{{ article.id }}">
+						<a href="{{ article.url }}">
 							{{ article.title }}
 						</a>
 						<br>

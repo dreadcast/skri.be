@@ -3,7 +3,7 @@ import server from './server';
 import logger from './util/logger';
 import CONF from './conf';
 
-import buildArticles from './build/data/article';
+import _build from './build/data';
 
 logger.info('Blog config', CONF)
 
@@ -24,8 +24,6 @@ export function dev() {
 
 export function build(){
 	watch({
-		onComplete(state){
-			buildArticles(state.articles);
-		}
+		onComplete: _build
 	});
 }

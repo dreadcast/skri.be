@@ -3,17 +3,15 @@ import logger from './../../util/logger';
 import render, { getTagged } from './../../view/articleCollection';
 
 export default function serveArticleCollection(articles, tag, response, type){
-	if(tag != undefined) {
-		articles = filter(({ tags }) => contains(tag, tags), articles);
-	}
+	var taggedArticles = getTagged(articles);
 
 	switch (type) {
 		case 'json':
-			return response.json(getTagged(articles, tag));
+			return response.json(taggedArticles);
 			break;
 
 		default:
-			return response.end(render(articles, tag));
+			return response.end(render(taggedArticles));
 			break;
 	}
 }

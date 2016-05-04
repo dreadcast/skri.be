@@ -4,7 +4,7 @@ import fs from 'fs-extra';
 import logger from './logger';
 import CONF from './../conf';
 
-const writeJson = Bluebird.promisify(fs.writeJson);
+const outputJson = Bluebird.promisify(fs.outputJson);
 
 export function cacheArticles(articles) {
 	return articles
@@ -22,5 +22,5 @@ export function writeCacheArticle(article) {
 
 	logger.info('WRITING DATA CACHE', cachePath);
 
-	return writeJson(cachePath, article);
+	return outputJson(cachePath, article);
 }

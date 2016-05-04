@@ -47,7 +47,7 @@ function setId(path) {
 	return assoc('id', getArticleId(path));
 }
 function setUrl(path) {
-	return assoc('url', getArticleId(path));
+	return assoc('url', '/' + getArticleId(path));
 }
 
 function setContent(body) {

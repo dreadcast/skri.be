@@ -23,8 +23,14 @@ export default function serveData(request, response, next){
 		return response.sendFile(join(CONF.pathToBlog, 'data', request.url));
 	}
 
-	if(contains(cleanPath, state.tag)) {
-		return serveArticleCollection(state.articles, cleanPath, response, type)
+	var matchTag = cleanPath.match(/^tag\/(.*)/);
+
+	if(matchTag) {
+		let tag = matchTag[1];
+
+		if(contains(tag, state.tag)) {
+			return serveArticleCollection(state.articles, tag, response, type)
+		}
 	}
 
 	let article = getById(cleanPath, state.articles);

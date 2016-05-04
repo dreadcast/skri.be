@@ -1,5 +1,6 @@
 import fs from 'fs-extra';
 import Path from 'path';
+import HtmlMinifier from 'html-minifier';
 import Bluebird from 'bluebird';
 import logger from './../../util/logger';
 import render from './../../view/article';
@@ -13,17 +14,21 @@ export default function buildArticles(articles) {
 }
 
 function buildArticle(article){
-	logger.info('BUILD', article.title);
+	logger.info('BUILD ARTICLE', article.title);
 
 	var destPath = Path.join(CONF.pathToBlog, 'build', article.id);
 
 	return outputJson(destPath + '.json', article)
 		.then(result => outputFile(
 			Path.join(destPath, 'index.html'),
-			render(article, 'html')
+			HtmlMinifier.minify(render(article, 'html'), {
+				collapseWhitespace: true
+			})
 		))
 		.then(result => outputFile(
 			Path.join(destPath, 'partial/index.html'),
-			render(article, 'partial')
+			HtmlMinifier.minify(render(article, 'partial'), {
+				collapseWhitespace: true
+			})
 		));
 }

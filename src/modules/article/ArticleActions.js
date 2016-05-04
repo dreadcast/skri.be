@@ -21,14 +21,6 @@ function updateArticle(article){
 			articleId: article.id,
 			article,
 		});
-
-		// article = getById(
-		// 	article.id,
-		// 	getState().articles
-		// );
-
-		// return writeCacheArticle(article)
-		// 	.then(result => article);
 	}
 }
 
@@ -56,12 +48,13 @@ function setArticleTemplates(article){
 		return article;
 	}
 }
-// find . -name "*.sum" -type f  -delete
+/*
+find . -name "*.sum" -type f -delete && find . -name "*.jsoncache" -type f -delete
+*/
 
 export function getArticle(path){
 	return function(dispatch, getState){
 		return fetchArticle(path)
-			// .then(article => dispatch(updateArticle(article)))
 			.then(article => {
 				dispatch(updateArticle(article))
 
@@ -83,17 +76,5 @@ export function getArticle(path){
 						.then(result => article);
 				}
 			});
-	}
-}
-
-export function reportCollision(article, tags){
-	return function(dispatch, getState) {
-		if(contains(article.id, tags || getState().tag)) {
-			dispatch({
-				type: REPORT_COLLISION,
-				articleId: article.id,
-				article
-			})
-		}
 	}
 }

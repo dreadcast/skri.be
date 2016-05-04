@@ -11,7 +11,13 @@
 
 	<section class="Article-tags">
 		{% for tag in article.tags %}
-			<a href="/{{ tag }}" class="Article-tag">#{{ tag }}</a>
+			<a
+				rel="tag"
+				href="/tag/{{ tag }}"
+				class="Article-tag"
+			>
+				#{{ tag }}
+			</a>
 		{% endfor %}
 	</section>
 
