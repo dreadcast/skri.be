@@ -48,9 +48,6 @@ function setArticleTemplates(article){
 		return article;
 	}
 }
-/*
-find . -name "*.sum" -type f -delete && find . -name "*.jsoncache" -type f -delete
-*/
 
 export function getArticle(path){
 	return function(dispatch, getState){

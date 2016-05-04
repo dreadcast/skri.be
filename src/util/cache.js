@@ -3,6 +3,7 @@ import Bluebird from 'bluebird';
 import fs from 'fs-extra';
 import logger from './logger';
 import CONF from './../conf';
+import { exec } from 'child_process';
 
 const outputJson = Bluebird.promisify(fs.outputJson);
 
@@ -23,4 +24,8 @@ export function writeCacheArticle(article) {
 	logger.info('WRITING DATA CACHE', cachePath);
 
 	return outputJson(cachePath, article);
+}
+
+export function purgeCache() {
+	return exec('find . -name "*.sum" -type f -delete && find . -name "*.jsoncache" -type f -delete');
 }

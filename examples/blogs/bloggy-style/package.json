@@ -11,8 +11,9 @@
 	"main": "./dev.js",
 
 	"scripts": {
+		"purge": "node purge.js",
 		"dev": "NODE_ENV=dev nodemon dev.js",
-		"build": "NODE_ENV=dev nodemon build.js"
+		"build": "NODE_ENV=prod nodemon build.js"
 	},
 
 	"config": {
