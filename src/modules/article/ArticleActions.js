@@ -1,4 +1,3 @@
-import { merge, mapObjIndexed, keys, contains } from 'ramda';
 import Bluebird from 'bluebird';
 
 import { fetchArticle } from './ArticleClient.js';
@@ -8,7 +7,6 @@ import logger from './../../util/logger.js';
 import getById from './../../lib/careme/getById.js';
 import { writeCacheArticle } from './../../util/cache';
 
-export const REPORT_COLLISION = 'REPORT_COLLISION';
 export const UPDATE_ARTICLE = 'UPDATE_ARTICLE';
 export const SET_ARTICLE_TEMPLATES = 'SET_ARTICLE_TEMPLATES';
 
