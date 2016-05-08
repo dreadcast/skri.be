@@ -9,7 +9,7 @@ const COLOR_ERROR = 'red';
 
 var logger = {
 	format(color, args){
-		if(process.env.NODE_ENV == 'dev'){
+		// if(process.env.NODE_ENV == 'dev'){
 			args = Array.prototype.slice.call(args);
 			// args = args.map(arg => chalk[color](arg) + '\n');
 			args = args.map(arg => {
@@ -47,7 +47,7 @@ var logger = {
 			args.unshift(chalk[color](type) + '\n');
 
 			return console.log.apply(console, args);
-		}
+		// }
 	},
 
 	log(){
