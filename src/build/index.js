@@ -1,3 +1,4 @@
+import { join } from 'path';
 import open from 'open';
 import express from 'express';
 import logger from './../util/logger';
