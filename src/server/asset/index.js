@@ -4,6 +4,9 @@ import fs from 'fs';
 import Bluebird from 'bluebird';
 import logger from './../../util/logger';
 
+import { processFile as processLessFile } from './../../asset/less';
+
+
 const readFile = Bluebird.promisify(fs.readFile);
 
 export default function serveAsset(request, response, next) {
@@ -21,6 +24,10 @@ export default function serveAsset(request, response, next) {
 			break;
 
 		case '.less':
+			processLessFile(path)
+				.then(css => response.end(css));
+			break;
+
 		case '.es':
 		case '.es6':
 		default:

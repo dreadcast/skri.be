@@ -9,7 +9,7 @@ import { pathToTheme, pathToBlog } from './../conf';
 const autoprefixPlugin = new LessPluginAutoPrefix({
 	browsers: ['last 2 versions']
 });
-const lessOptions = {
+const LESS_OPTIONS = {
 	plugins: [autoprefixPlugin],
 	paths: [
 		pathToTheme + '/less',
@@ -18,25 +18,32 @@ const lessOptions = {
 };
 const readFile = Bluebird.promisify(fs.readFile);
 
-export default function process(path){
+export function processFile(path) {
 	return readFile(path, {
 		encoding: 'utf-8'
 	})
-		.then(data => {
-			return new Bluebird(function(resolve, reject){
-				less.render(
-					data,
-					assoc('filename', path, lessOptions),
-					function(error, output) {
-						if(error) {
-							logger.error(error);
-							reject(error);
+		.then(process);
+}
+export default function process(data, filename){
+	return new Bluebird(function(resolve, reject){
+		var lessOptions = LESS_OPTIONS;
 
-						} else {
-							resolve(output.css);
-						}
-					}
-				);
-			});
-		});
+		if(filename) {
+			lessOptions = assoc('filename', filename, LESS_OPTIONS);
+		}
+
+		less.render(
+			data,
+			lessOptions,
+			function(error, output) {
+				if(error) {
+					logger.error(error);
+					reject(error);
+
+				} else {
+					resolve(output.css);
+				}
+			}
+		);
+	});
 }

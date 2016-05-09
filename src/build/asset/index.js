@@ -1,7 +1,7 @@
 import { join, relative } from 'path';
 import recurse from 'fs-recurse';
 import fs from 'fs-extra';
-import processLess from './../../asset/less';
+import { processFile as processLessFile } from './../../asset/less';
 import Bluebird from 'bluebird';
 import logger from './../../util/logger';
 import { pathToTheme, pathToBlog } from './../../conf';
@@ -19,7 +19,7 @@ function process(path, file, type, cursor) {
 
 		case 'less':
 			logger.info('LESS file found, process!');
-			processLess(from)
+			processLessFile(from)
 				.then(css => {
 					if(css) {
 						to = to.replace(/\.less$/, '.css');

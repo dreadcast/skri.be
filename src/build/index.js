@@ -21,5 +21,5 @@ function testServe() {
 export default function build(state) {
 	return buildData(state)
 		.then(buildAsset)
-		// .then(testServe);
+		.then(testServe);
 }
