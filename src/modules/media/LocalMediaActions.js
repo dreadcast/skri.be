@@ -20,7 +20,6 @@ export function getLocalMediaInfo(media, articleId){
 
 				media = merge(media, {
 					provider: 'local',
-					thumbnail: suffixFilename('-thumb', media.url),
 					width,
 					height,
 					html,
@@ -29,16 +28,16 @@ export function getLocalMediaInfo(media, articleId){
 
 				media = merge(media, getRatio(width, height));
 
-				dispatch({
+				return resizeImage(media);
+			})
+			.then(media => {
+				return dispatch({
 					type: UPDATE_MEDIA,
 					mediaId: media.id,
 					articleId,
 					media,
 				});
-
-				return media
 			})
-			.then(media => resizeImage(media.url))
 			.catch(error => logger.error('Error parsing media info', error));
 	}
 }
@@ -50,18 +49,12 @@ function suffixFilename(sizeName, filename) {
 }
 
 function saveImage(image, path, size) {
-	logger.info(
-		'Writing ' + size,
-		suffixFilename('-' + size, path)
-	);
-
 	return image
 		.quality(80)
 		.write(suffixFilename('-' + size, path));
 }
 
 function createThumb(image, path) {
-	logger.info('CREATE THUMB')
 	var { width, height } = CONF.theme.imageSizes.thumb;
 
 	image.cover(width, height, Jimp.RESIZE_BICUBIC);
@@ -69,19 +62,25 @@ function createThumb(image, path) {
 }
 
 function createSmall(image, path) {
-	logger.info('CREATE SMALL')
 	var size = CONF.theme.imageSizes.small;
 
 	image.scaleToFit(size, size, Jimp.RESIZE_BICUBIC);
 	return saveImage(image, path, 'small');
 }
 
-function resizeImage(path) {
-	path = join(CONF.pathToBlog, 'data', path);
+function resizeImage(media) {
+	var path = join(CONF.pathToBlog, 'data', media.url);
 
 	return Jimp.read(path)
 		.then(image => {
+			logger.info('Resize', path);
+
 			createSmall(image, path);
 			createThumb(image, path);
-		})
+
+			return merge(media, {
+				thumbnail: suffixFilename('-thumb', media.url),
+				small: suffixFilename('-small', media.url),
+			});
+		});
 }
