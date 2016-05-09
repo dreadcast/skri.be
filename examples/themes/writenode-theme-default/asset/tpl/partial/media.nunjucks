@@ -3,7 +3,7 @@
 		<a
 			href="{{ media.url }}"
 			class="embed-responsive-item embed-responsive-img"
-			style="background-image: url({{ media.url }})"
+			style="background-image: url({{ media.thumbnail }})"
 		>
 		</a>
 	{% else %}

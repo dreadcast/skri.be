@@ -11,6 +11,13 @@
 	"main": "package.json",
 
 	"config": {
+		"imageSizes": {
+			"thumb": {
+				"width": 256,
+				"height": 256
+			},
+			"small": 800
+		},
 		"perPage": 10,
 		"feedLength": 10,
 		"defaultTemplates": {
