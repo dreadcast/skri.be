@@ -49,19 +49,39 @@ function suffixFilename(sizeName, filename) {
 	});
 }
 
+function saveImage(image, path, size) {
+	logger.info(
+		'Writing ' + size,
+		suffixFilename('-' + size, path)
+	);
+
+	return image
+		.quality(80)
+		.write(suffixFilename('-' + size, path));
+}
+
+function createThumb(image, path) {
+	logger.info('CREATE THUMB')
+	var { width, height } = CONF.theme.imageSizes.thumb;
+
+	image.cover(width, height, Jimp.RESIZE_BICUBIC);
+	return saveImage(image, path, 'thumb');
+}
+
+function createSmall(image, path) {
+	logger.info('CREATE SMALL')
+	var size = CONF.theme.imageSizes.small;
+
+	image.scaleToFit(size, size, Jimp.RESIZE_BICUBIC);
+	return saveImage(image, path, 'small');
+}
+
 function resizeImage(path) {
-	var sourcePath = join(CONF.pathToBlog, 'data', path);
+	path = join(CONF.pathToBlog, 'data', path);
 
-	return Jimp.read(sourcePath)
-		.then(image => image.cover(
-			CONF.theme.imageSizes.thumb.width,
-			CONF.theme.imageSizes.thumb.height,
-		))
+	return Jimp.read(path)
 		.then(image => {
-			logger.info('Writing thumbnail', suffixFilename('-thumb', path));
-
-			return image
-				.quality(80)
-				.write(suffixFilename('-thumb', sourcePath));
-		});
+			createSmall(image, path);
+			createThumb(image, path);
+		})
 }
