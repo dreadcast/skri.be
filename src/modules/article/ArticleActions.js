@@ -2,10 +2,12 @@ import Bluebird from 'bluebird';
 
 import { fetchArticle } from './ArticleClient.js';
 import { addTags } from './../tag/TagActions.js';
+import { addWords } from './../index/IndexActions.js';
 import { UPDATE_MEDIA, getMediaInfo } from './../media/MediaActions.js';
 import logger from './../../util/logger.js';
 import getById from './../../lib/careme/getById.js';
 import { writeCacheArticle } from './../../util/cache';
+import { clean, stripTags } from 'superscore.string';
 
 export const UPDATE_ARTICLE = 'UPDATE_ARTICLE';
 export const SET_ARTICLE_TEMPLATES = 'SET_ARTICLE_TEMPLATES';
@@ -13,6 +15,12 @@ export const SET_ARTICLE_TEMPLATES = 'SET_ARTICLE_TEMPLATES';
 function updateArticle(article){
 	return function(dispatch, getState){
 		dispatch(addTags(article.tags));
+
+		var body = stripTags(article.content);
+		var words = body.split(/\W+/)
+			.filter(word => word.length > 2);
+
+		dispatch(addWords(article.id, words));
 
 		dispatch({
 			type: UPDATE_ARTICLE,

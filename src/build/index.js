@@ -5,6 +5,7 @@ import logger from './../util/logger';
 import { pathToBlog, testPort } from './../conf';
 import buildData from './data';
 import buildAsset from './asset';
+import buildIndex from './index/index.js';
 
 function testServe() {
 	const app = express();
@@ -20,6 +21,7 @@ function testServe() {
 
 export default function build(state) {
 	return buildData(state)
+		.then(result => buildIndex(state.index))
 		.then(buildAsset)
 		.then(testServe);
 }
