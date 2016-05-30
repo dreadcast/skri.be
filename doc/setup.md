@@ -1,5 +1,5 @@
 # Blog setup
-33,50
+
 Create a [package.json](https://docs.npmjs.com/files/package.json) file at the root of your blog, this will describe your project and dependencies.
 
 ## Required fields
