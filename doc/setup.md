@@ -2,6 +2,8 @@
 
 Create a [package.json](https://docs.npmjs.com/files/package.json) file at the root of your blog, this will describe your project and dependencies.
 
+See how to [add data](data.md) to your blog.
+
 ## Required fields
 ### Dependencies
 Your skri.be blog requires one dependency, skri.be itself and, possibly a [skri.be theme](themes.md).
