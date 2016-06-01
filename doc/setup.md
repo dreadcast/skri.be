@@ -30,13 +30,13 @@ Consider adding a `dev.js` file at the root of your blog which contains:
 require('skri.be').dev();
 ```
 
-### build
+### build()
 Add a `build.js` file to make a build of the static blog:
 ```
 require('skri.be').build();
 ```
 
-### purge
+### purge()
 Optionally, you can specify a purge script in order to cleanup your cache.
 
 ```
@@ -66,10 +66,9 @@ After completing a build, you can test the result in a simple web server, on an 
 
 Tell skri.be were to find your theme by either specifying `path` or `name`:
 
-#### path
+- `path`
 Path to blog theme, absolute or relative to blog's root. (ie. `./../path/to/theme_folder`).
-
-#### name
+- ``
 If theme is a node package (defined as a dependency), specify a `name` field (ie. `any-theme-package`).
 
 #### title, description
