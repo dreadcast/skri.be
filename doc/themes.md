@@ -1,16 +1,15 @@
 # Themes
 
 A skri.be theme contains all templates and assets you'll need to generate a
-static blog. [Nunjucks](https://github.com/mozilla/nunjucks) is currently the
+static blog. [Nunjucks](http://mozilla.github.io/nunjucks/templating.html) is currently the
 only supported template engine.
 
-Just like your blog, your theme should be a valid npm package and thus,
+Just like your blog, your theme should be a valid [npm](https://docs.npmjs.com/files/package.json) package (but not necessary published) and thus,
 contain a valid `package.json`.
 
 ## Fields
 
-There are two fields, `main` whose value will always be `package.json` and a
-config.
+There are two fields, `main` whose value will always be `package.json` and `config`.
 
 ### Theme config
 

@@ -2,25 +2,43 @@
 
 The data is your blog content.
 
-Your blog content will be in a `data` folder. Each subfolder is a potential
-blog entry (article).
+Your blog content will be in a `data` folder. Each subfolder is a potential blog entry (article) containing a `data.md` file and any amount of attached files (images, videos, PDF, etc). Nested posts should work, but are not tested yet.
 
-## Structure
+## Front matter
+[Front matter](https://jekyllrb.com/docs/frontmatter/) allows your to add metadata to your blog posts using YAML format.
+
+Standards fields are:
+
+- created: Entry creation date (ISO 8601).
+- tags: Coma separated tags.
+- medias: List of medias, more info below.
+
+### Medias
+Either list your medias URL or add some more info.
+
+#### URLs list
 ```
-blog-root
-|_ build
-|_ data
-|   |_ some-blog-post
-|   |   |_ data.md
-|   |   |_ image.jpg
-|   |   |_ other-image.jpg
-|   |
-|   |_ some-other-blog-post
-|       |_ data.md
-|       |_ great-image.jpg
-|
-|_ package.json
-|_ build.js
-|_ dev.js
-|_ purge.js
+medias:
+    - https://www.youtube.com/watch?v=MGuKhcnrqGA
+    - https://soundcloud.com/figubbrazlevic/sets/tek-figub-the-everyday-headnod
+    - image.jpg
+```
+
+#### Media collection
+This way allows you to describe your medias.
+
+`id` key is optional. If omitted, url key is used as id.
+
+```
+medias:
+    - caption: React Conf
+      url: https://www.youtube.com/watch?v=MGuKhcnrqGA
+      id: react-video
+    - caption: Tek & Figub - The Everyday Headnod
+      url: https://soundcloud.com/figubbrazlevic/sets/tek-figub-the-everyday-headnod
+      id: figub
+    - caption: My great image
+      url: image.jpg
+    - caption: My other great image
+      url: other-image.jpg
 ```

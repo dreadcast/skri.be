@@ -1,35 +1,41 @@
 # Blog setup
 
-Create a [package.json](https://docs.npmjs.com/files/package.json) file at the root of your blog, this will describe your project and dependencies.
+A skri.be blog consists in 2 things:
 
-See how to [add data](data.md) to your blog.
+- The [content](data.md) or _data_
+- The [theme](themes.md), which contains templates and assets
 
-## Required fields
-### Dependencies
-Your skri.be blog requires one dependency, skri.be itself and, possibly a [skri.be theme](themes.md).
+Create a [package.json](https://docs.npmjs.com/files/package.json) file at the root of your blog, it will describe your blog and specify dependencies.
+
+## Dependencies
+Your skri.be blog requires one dependency, the [skri.be package](https://www.npmjs.com/package/skri.be).
+
+Additional dependencies can either be a [theme package](themes.md) or any other JS/CSS library (jQuery, Bootstrap, VelocityJS, etc)
 
 ```
 "dependencies": {
 	"skri.be": "latest",
-	"any-theme-package": "any-theme-package#version/git url"
+	"bootstrap": "3.3.6",
+	"any-theme-package": "any-theme-package#version/git url",
 },
-
 ```
 
-To run your blog, you'll need to specify a `scripts` [field](https://docs.npmjs.com/files/package.json#scripts) and matching JS files.
+## Run your blog!
+Skri.be exposes 3 functions to run your blog. The best solution consists in defining custom scripts in the `script` field of your [package.json file](https://docs.npmjs.com/files/package.json#scripts).
 
-### dev
-This one provides a local dev server.
-`"dev": "NODE_ENV=dev node dev.js"`.
-`dev.js` will _at least_ require the skri.be module which exports a `dev()` method.
+
+### dev()
+Consider adding a `dev.js` file at the root of your blog which contains:
 ```
 require('skri.be').dev();
 ```
+
 ### build
-This script will build your static blog.
+Add a `build.js` file to make a build of the static blog:
 ```
 require('skri.be').build();
 ```
+
 ### purge
 Optionally, you can specify a purge script in order to cleanup your cache.
 
@@ -37,6 +43,7 @@ Optionally, you can specify a purge script in order to cleanup your cache.
 require('skri.be').purge();
 ```
 
+#### Then your script field look like:
 ```
 "scripts": {
 	"purge": "node purge.js",
@@ -53,13 +60,17 @@ This is where you configure your blog.
 Dev server port: `"port": "8080"`
 
 ### testPort
-Before publishing your build, you can test it on an alternate port: `"port": "8081"`
+After completing a build, you can test the result in a simple web server, on an alternate port: `"port": "8081"`
 
 ### theme
-#### path
 
-Path to blog theme, relative to blog's root. If theme is
-a node package, path will look like `node_modules/THEME_NAME`.
+Tell skri.be were to find your theme by either specifying `path` or `name`:
+
+#### path
+Path to blog theme, absolute or relative to blog's root. (ie. `./../path/to/theme_folder`).
+
+#### name
+If theme is a node package (defined as a dependency), specify a `name` field (ie. `any-theme-package`).
 
 #### title, description
 Blog meta
@@ -74,20 +85,21 @@ An array of featured tags you'll want to display, for example, in a navigation b
 	"version": "0.0.1",
 	"homepage": "http://blog-url.tld",
 	"description": "Blog package description",
-
-	"main": "./dev.js",
-
+	"dependencies": {
+		"skri.be": "0.3.3",
+		"bootstrap": "3.3.6",
+		"any-theme-package": "0.0.5"
+	},
 	"scripts": {
 		"purge": "node purge.js",
 		"dev": "NODE_ENV=dev node dev.js",
 		"build": "NODE_ENV=production node build.js"
 	},
-
 	"config": {
 		"port": 8084,
 		"testPort": 8085,
 		"theme": {
-			"path": "./../../themes/writenode-theme-default"
+			"name": "any-theme-package"
 		},
 		"title": "Greatest blog in the world",
 		"description": "Greatest blog in the world because it has the best content in the world!",
@@ -97,4 +109,26 @@ An array of featured tags you'll want to display, for example, in a navigation b
 	}
 }
 
+```
+
+## Blog structure
+
+```
+blog-root
+|_ build
+|_ data
+|   |_ some-blog-post
+|   |   |_ data.md
+|   |   |_ image.jpg
+|   |   |_ other-image.jpg
+|   |
+|   |_ some-other-blog-post
+|       |_ data.md
+|       |_ great-image.jpg
+|
+|_ package.json
+|_ build.js
+|_ dev.js
+|_ purge.js
+|_ node_modules
 ```

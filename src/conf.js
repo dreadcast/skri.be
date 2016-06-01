@@ -14,7 +14,7 @@ var pathToTheme,
 if(blogConf.theme.path) {
 	pathToTheme = resolve(blogConf.theme.path);
 
-} else if(blogConf.path.name) {
+} else if(blogConf.theme.name) {
 	pathToTheme = resolve(join(pathToBlog, 'node_modules', blogConf.theme.name));
 }
 
